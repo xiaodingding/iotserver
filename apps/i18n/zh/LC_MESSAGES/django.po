@@ -1362,8 +1362,8 @@ msgid ""
 "User attr map present how to map LDAP user attr to iotserver, username,name,"
 "email is iotserver attr"
 msgstr ""
-"用户属性映射代表怎样将LDAP中用户属性映射到jumpserver用户上，username, name,"
-"email 是jumpserver的属性"
+"用户属性映射代表怎样将LDAP中用户属性映射到Iotserver用户上，username, name,"
+"email 是Iotserver的属性"
 
 #: common/forms.py:137
 msgid "Enable LDAP auth"
@@ -2409,7 +2409,7 @@ msgstr "上一步"
 
 #: users/templates/users/first_login_done.html:30
 msgid "Welcome to use iotserver, visit "
-msgstr "欢迎使用Jumpserver开源跳板机系统"
+msgstr "欢迎使用Iotserver开源跳板机系统"
 
 #: users/templates/users/first_login_done.html:31
 msgid "Use guide"
@@ -3041,7 +3041,7 @@ msgstr "登录"
 #~ msgstr "添加命令存储"
 
 #~ msgid "Welcome to use iotserver system"
-#~ msgstr "欢迎使用Jumpserver开源跳板机系统"
+#~ msgstr "欢迎使用Iotserver开源跳板机系统"
 
 #~ msgid "This will reset the user\\"
 #~ msgstr "重置"

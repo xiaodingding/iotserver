@@ -8,7 +8,7 @@
 iotserver is a open source proxy server, developed by `Python` and `Django`, aim to help
 companies to efficiently user, assets, authority and audit management
 
-Jumpserver是一款使用Python, Django开发的开源跳板机系统, 助力互联网企业高效 用户、资产、权限、审计 管理
+Iotserver是一款使用Python, Django开发的开源跳板机系统, 助力互联网企业高效 用户、资产、权限、审计 管理
 
 ### Feature 功能
   - Auth 统一认证
@@ -95,7 +95,7 @@ demo使用了开发者模式，并发只能为1
 - 小彧 <李磊> Django资深开发者，为users模块贡献了很多代码
 - sofia <周小侠> 资深前端工程师, luna前端代码贡献者和现在维护者
 - liuz <刘正> 全栈工程师, 编写了luna大部分代码
-- jiaxiangkong <陈尚委> Jumpserver测试运营
+- jiaxiangkong <陈尚委> Iotserver测试运营
 
 #### 0.3.2
 - halcyon <王墉> DevOps 资深开发者, 0.3.2 核心开发者之一
@@ -103,7 +103,7 @@ demo使用了开发者模式，并发只能为1
 - kelianchun <柯连春> DevOps 资产开发者，fix了很多connect.py bug
 
 ### 开发者群
-如果你为Jumpserver贡献过代码，请加一下群 （需要验证一下你的github id）
+如果你为Iotserver贡献过代码，请加一下群 （需要验证一下你的github id）
 
 群号: 489385245
 

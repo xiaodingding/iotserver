@@ -1,6 +1,6 @@
 ## REST API规范约定
 
-这里仅考虑REST API的基本情况。参考 
+这里仅考虑REST API的基本情况。参考
 
 [RESTful API 设计指南](http://www.ruanyifeng.com/blog/2014/05/restful_api.html)
 
@@ -13,7 +13,7 @@ API与用户的通信协议，总是使用HTTPs协议。
 
 ### 域名
 
-这版api相对简单, 没有前后端分离, 没有独立app, 所以放在主域名下 
+这版api相对简单, 没有前后端分离, 没有独立app, 所以放在主域名下
 
 ```
 https://example.org/api/
@@ -21,7 +21,7 @@ https://example.org/api/
 
 ### 版本
 
-将API的版本号放入URL中, 由于一个项目多个app所以Jumpserver使用以下风格,
+将API的版本号放入URL中, 由于一个项目多个app所以Iotserver使用以下风格,
 将版本号放到app后面
 
 ```
