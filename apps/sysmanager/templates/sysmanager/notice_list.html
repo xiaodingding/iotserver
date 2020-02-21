@@ -67,7 +67,7 @@
             ],
             op_html: $('#actions').html()
         };
-        jumpserver.initDataTable(options);
+        iotserver.initDataTable(options);
     }
 
 
@@ -124,7 +124,7 @@ $(document).ready(function(){
             var url_delete = the_url + '?id__in=' + JSON.stringify(plain_id_list);
             APIUpdateAttr({url: url_delete, method: 'DELETE', success: success, error: fail});
             $data_table.ajax.reload();
-            jumpserver.checked = false;
+            iotserver.checked = false;
         });
     }
 	function doUpdate() {
@@ -184,7 +184,7 @@ $(document).ready(function(){
         var msg = "{% trans 'The selected data templets has been updated successfully.' %}";
         swal("{% trans 'Data Templet Updated' %}", msg, "success");
         $('#notice_list_table').DataTable().ajax.reload();
-        jumpserver.checked = false;
+        iotserver.checked = false;
     };
 {#	console.log(JSON.stringify(post_list));#}
     APIUpdateAttr({url: the_url, method: 'PATCH', body: JSON.stringify(post_list), success: success});

@@ -127,7 +127,7 @@ class LDAPSettingForm(BaseForm):
             "name": "sn",
             "email": "mail"
         }),
-        help_text=_("User attr map present how to map LDAP user attr to jumpserver, username,name,email is jumpserver attr")
+        help_text=_("User attr map present how to map LDAP user attr to iotserver, username,name,email is iotserver attr")
     )
     # AUTH_LDAP_GROUP_SEARCH_OU = CONFIG.AUTH_LDAP_GROUP_SEARCH_OU
     # AUTH_LDAP_GROUP_SEARCH_FILTER = CONFIG.AUTH_LDAP_GROUP_SEARCH_FILTER

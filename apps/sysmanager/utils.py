@@ -18,5 +18,5 @@ from common.utils import reverse, get_object_or_none
 
 
 
-logger = logging.getLogger('jumpserver')
+logger = logging.getLogger('iotserver')
 

@@ -4,4 +4,4 @@
 from django.dispatch import Signal
 
 django_ready = Signal()
-ldap_auth_enable = Signal(providing_args=["enabled"])
+# ldap_auth_enable = Signal(providing_args=["enabled"])

@@ -146,8 +146,8 @@
                 ajax_url: '{% url "api-perms:user-group-asset-groups" pk=user_group.id %}',
                 columns: [{data: function(){return ""}}, {data: "name" }, {data: "assets_amount" }]
             };
-            jumpserver.initDataTable(options);
-            jumpserver.initDataTable(options2);
+            iotserver.initDataTable(options);
+            iotserver.initDataTable(options2);
         });
     </script>
 {% endblock %}

@@ -2,4 +2,4 @@
 #
 
 cd ..
-docker build -t jumpserver/jumpserver:v0.4.0-beta1 .
+docker build -t iotserver/iotserver:v0.4.0-beta1 .

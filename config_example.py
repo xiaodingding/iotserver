@@ -1,10 +1,10 @@
 """
-    jumpserver.config
+    iotserver.config
     ~~~~~~~~~~~~~~~~~
 
-    Jumpserver project setting file
+    iotserver project setting file
 
-    :copyright: (c) 2014-2017 by Jumpserver Team
+    :copyright: (c) 2014-2017 by iotserver Team
     :license: GPL v2, see LICENSE for more details.
 """
 import os
@@ -40,7 +40,7 @@ class Config:
     # DB_PORT = 3306
     # DB_USER = 'root'
     # DB_PASSWORD = ''
-    # DB_NAME = 'jumpserver'
+    # DB_NAME = 'iotserver'
 
     # When Django start it will bind this host and port
     # ./manage.py runserver 127.0.0.1:8080

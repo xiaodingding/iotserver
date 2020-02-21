@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Jumpserver 0.3.3\n"
+"Project-Id-Version: iotserver 0.3.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-01 12:36+0800\n"
 "PO-Revision-Date: 2018-02-03 16:27+0800\n"
 "Last-Translator: ibuler <ibuler@qq.com>\n"
-"Language-Team: Jumpserver team <ibuler@qq.com>\n"
+"Language-Team: iotserver team <ibuler@qq.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1359,8 +1359,8 @@ msgstr "LDAP属性映射"
 
 #: common/forms.py:130
 msgid ""
-"User attr map present how to map LDAP user attr to jumpserver, username,name,"
-"email is jumpserver attr"
+"User attr map present how to map LDAP user attr to iotserver, username,name,"
+"email is iotserver attr"
 msgstr ""
 "用户属性映射代表怎样将LDAP中用户属性映射到jumpserver用户上，username, name,"
 "email 是jumpserver的属性"
@@ -2408,7 +2408,7 @@ msgid "Prev step"
 msgstr "上一步"
 
 #: users/templates/users/first_login_done.html:30
-msgid "Welcome to use jumpserver, visit "
+msgid "Welcome to use iotserver, visit "
 msgstr "欢迎使用Jumpserver开源跳板机系统"
 
 #: users/templates/users/first_login_done.html:31
@@ -3040,7 +3040,7 @@ msgstr "登录"
 #~ msgid "Add command storage"
 #~ msgstr "添加命令存储"
 
-#~ msgid "Welcome to use Jumpserver system"
+#~ msgid "Welcome to use iotserver system"
 #~ msgstr "欢迎使用Jumpserver开源跳板机系统"
 
 #~ msgid "This will reset the user\\"

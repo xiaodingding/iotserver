@@ -1,4 +1,4 @@
-# Jumpserver 项目规范（Draft）
+# iotserver 项目规范（Draft）
 
 ## 语言框架
 1. Python 3.6.1 (当前最新)

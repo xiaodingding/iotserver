@@ -60,7 +60,7 @@ $(document).ready(function(){
         columns: [{data: "id"}, {data: "name" }, {data: "devices_amount" }, {data: "comment" }, {data: "id"}],
 	    op_html: $('#actions').html()
     };
-    jumpserver.initDataTable(options);
+    iotserver.initDataTable(options);
 })
 
 .on('click', '.btn_device_group_delete', function () {
@@ -113,7 +113,7 @@ $(document).ready(function(){
             var url_delete = the_url + '?id__in=' + JSON.stringify(plain_id_list);
             APIUpdateAttr({url: url_delete, method: 'DELETE', success: success, error: fail});
             $data_table.ajax.reload();
-            jumpserver.checked = false;
+            iotserver.checked = false;
         });
     }
 	function doUpdate() {
@@ -175,7 +175,7 @@ $(document).ready(function(){
         var msg = "{% trans 'The selected device groups has been updated successfully.' %}";
         swal("{% trans 'Device Group Updated' %}", msg, "success");
         $('#device_groups_list_table').DataTable().ajax.reload();
-        jumpserver.checked = false;
+        iotserver.checked = false;
     };
 {#	console.log(JSON.stringify(post_list));#}
     APIUpdateAttr({url: the_url, method: 'PATCH', body: JSON.stringify(post_list), success: success});

@@ -55,7 +55,7 @@ def start_gunicorn():
         collect_static()
         os.chdir(APPS_DIR)
 
-        cmd = "gunicorn jumpserver.wsgi -b {}:{} -w {} ".format(
+        cmd = "gunicorn iotserver.wsgi -b {}:{} -w {} ".format(
             HTTP_HOST, HTTP_PORT, WORKERS
         )
         log_format = '%(h)s %(t)s "%(r)s" %(s)s %(b)s '
@@ -125,7 +125,7 @@ def start_beat():
 
 def start_service(services):
     print(time.ctime())
-    print('Jumpserver version {}, more see https://www.ddsiot.cn'.format(
+    print('iotserver version {}, more see https://www.ddsiot.cn'.format(
         __version__))
     print('Quit the server with CONTROL-C.')
 
@@ -168,7 +168,7 @@ def stop_service():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Jumpserver start tools")
+    parser = argparse.ArgumentParser(description="iotserver start tools")
     parser.add_argument("services", type=str, nargs='+', default="all",
                         choices=("all", "gunicorn", "celery", "beat"),
                         help="The service to start",

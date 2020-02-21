@@ -1,31 +1,31 @@
-# Common app 
+# Common app
 
 Common app provide common view, function or others.
 
-Common app shouldn't rely on other apps, because It may lead to cycle 
+Common app shouldn't rely on other apps, because It may lead to cycle
 import.
 
-If your want to implement some function or class, you should think 
+If your want to implement some function or class, you should think
 whether other app use or not. If yes, You should make in common.
 
-If the ability more relate to your app tightness, It's mean your app 
+If the ability more relate to your app tightness, It's mean your app
 provide this ability, not common, You should write it on your app utils.
 
 
 
-## Celery usage 
+## Celery usage
 
 
-Jumpserver use celery to run task async. Using redis as the broker, so
+iotserver use celery to run task async. Using redis as the broker, so
 you should run a redis instance
 
 #### Run redis
 
-	$ yum -y install redis 
-	
+	$ yum -y install redis
+
 	or
-	
-	$ docker run -name jumpserver-redis -d -p 6379:6379 redis redis-server
+
+	$ docker run -name iotserver-redis -d -p 6379:6379 redis redis-server
 
 
 #### Write tasks in app_name/tasks.py
@@ -47,19 +47,19 @@ def longtime_add(x, y):
     time.sleep(5)
     print 'long time task finished'
     return x + y
-    
+
 
 @celery_app.task(name='hello-world')
 def hello():
     print 'hello world!'
-  
+
 ```
 
-#### Run celery in development 
+#### Run celery in development
 
 ```
 $ cd apps
-$ celery -A common worker -l info 
+$ celery -A common worker -l info
 ```
 
 #### Test using task

@@ -137,7 +137,7 @@ $(document).ready(function(){
                   {data: "status" }, {data: "date_created" },{data: "is_online"},{data: "id" }],
         op_html: $('#actions').html()
     };
-    jumpserver.initDataTable(options);
+    iotserver.initDataTable(options);
 })
 
 .on('click', '.btn_device_delete', function () {
@@ -187,7 +187,7 @@ $(document).ready(function(){
             var url_delete = the_url + '?id__in=' + JSON.stringify(plain_id_list);
             APIUpdateAttr({url: url_delete, method: 'DELETE', success: success, error: fail});
             $data_table.ajax.reload();
-            jumpserver.checked = false;
+            iotserver.checked = false;
         });
     }
     switch (action) {

@@ -13,12 +13,12 @@ from .utils import get_logger
 logger = get_logger(__file__)
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jumpserver.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'iotserver.settings')
 
 from django.conf import settings
 from django.core.cache import cache
 
-app = Celery('jumpserver')
+app = Celery('iotserver')
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.

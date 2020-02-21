@@ -4,12 +4,12 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
-from .forms import EmailSettingForm, LDAPSettingForm, BasicSettingForm, \
+from .forms import EmailSettingForm, BasicSettingForm, LDAPSettingForm,\
     TerminalSettingForm
 from .models import Setting
 from .mixins import AdminUserRequiredMixin
 # from .mixins
-from .signals import ldap_auth_enable
+# from .signals import ldap_auth_enable
 
 
 class BasicSettingView(AdminUserRequiredMixin, TemplateView):
@@ -79,17 +79,20 @@ class LDAPSettingView(AdminUserRequiredMixin, TemplateView):
 
     def post(self, request):
         form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
-            if "AUTH_LDAP" in form.cleaned_data:
-                ldap_auth_enable.send(form.cleaned_data["AUTH_LDAP"])
-            msg = _("Update setting successfully, please restart program")
-            messages.success(request, msg)
-            return redirect('settings:ldap-setting')
-        else:
-            context = self.get_context_data()
-            context.update({"form": form})
-            return render(request, self.template_name, context)
+        # if form.is_valid():
+        #     form.save()
+        #     if "AUTH_LDAP" in form.cleaned_data:
+        #         ldap_auth_enable.send(form.cleaned_data["AUTH_LDAP"])
+        #     msg = _("Update setting successfully, please restart program")
+        #     messages.success(request, msg)
+        #     return redirect('settings:ldap-setting')
+        # else:
+        #     context = self.get_context_data()
+        #     context.update({"form": form})
+        #     return render(request, self.template_name, context)
+        context = self.get_context_data()
+        context.update({"form": form})
+        return render(request, self.template_name, context)
 
 
 class TerminalSettingView(AdminUserRequiredMixin, TemplateView):

@@ -62,14 +62,14 @@ class UserLoginView(FormView):
             login_ip = self.request.META.get('REMOTE_ADDR', '')
         user_agent = self.request.META.get('HTTP_USER_AGENT', '')
         print(login_ip, user_agent)
-        write_login_log_async.delay(
-            self.request.user.username, type='W',
-            ip=login_ip, user_agent=user_agent
-        )
-        # write_login_log_sync(
+        # write_login_log_async.delay(
         #     self.request.user.username, type='W',
         #     ip=login_ip, user_agent=user_agent
         # )
+        write_login_log_sync(
+            self.request.user.username, type='W',
+            ip=login_ip, user_agent=user_agent
+        )
         return redirect(self.get_success_url())
 
     def get_success_url(self):

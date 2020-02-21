@@ -19,7 +19,7 @@ from users.models import User, LoginLog
 from .models import Identify
 
 
-logger = logging.getLogger('jumpserver')
+logger = logging.getLogger('iotserver')
 
 
 def check_identify_valid(**kwargs):

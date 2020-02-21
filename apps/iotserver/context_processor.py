@@ -2,7 +2,7 @@
 #
 
 
-def jumpserver_processor(request):
+def iotserver_processor(request):
     context = {}
 
     # Setting default pk

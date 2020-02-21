@@ -9,7 +9,7 @@ from django.views.generic import CreateView, DeleteView, ListView,DetailView
 from .models import Picture
 from .response import JSONResponse, response_mimetype
 from .serialize import serialize
-from jumpserver import settings as setting
+from iotserver import settings as setting
 from uuslug import slugify
 from .hands import AdminUserRequiredMixin
 

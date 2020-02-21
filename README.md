@@ -1,11 +1,11 @@
-## Jumpserver
+## iotserver
 
 [![Python3](https://img.shields.io/badge/python-3.6-green.svg?style=plastic)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/django-1.11-brightgreen.svg?style=plastic)](https://www.djangoproject.com/)
 [![Ansible](https://img.shields.io/badge/ansible-2.2.2.0-blue.svg?style=plastic)](https://www.ansible.com/)
 [![Paramiko](https://img.shields.io/badge/paramiko-2.1.2-green.svg?style=plastic)](http://www.paramiko.org/)
 
-Jumpserver is a open source proxy server, developed by `Python` and `Django`, aim to help
+iotserver is a open source proxy server, developed by `Python` and `Django`, aim to help
 companies to efficiently user, assets, authority and audit management
 
 Jumpserver是一款使用Python, Django开发的开源跳板机系统, 助力互联网企业高效 用户、资产、权限、审计 管理
@@ -27,17 +27,17 @@ Jumpserver是一款使用Python, Django开发的开源跳板机系统, 助力互
 ### 快速启动
 
 ```
-$ docker run -p 8080:80 -p 2222:2222 jumpserver/jumpserver:0.5.0-beta2
+$ docker run -p 8080:80 -p 2222:2222 iotserver/iotserver:0.5.0-beta2
 ```
-更多见 [Dockerfile](https://github.com/jumpserver/Dockerfile.git)
+更多见 [Dockerfile](https://github.com/iotserver/Dockerfile.git)
 
 ### 详细安装步骤
 
-    [文档](https://github.com/jumpserver/jumpserver/wiki/v0.5.0-%E5%9F%BA%E4%BA%8E-CentOS7)
+    [文档](https://github.com/iotserver/iotserver/wiki/v0.5.0-%E5%9F%BA%E4%BA%8E-CentOS7)
 
 
 ### Usage 使用
-   1. Visit http://$HOST:8080 (访问 http://你的主机IP:8080 来访问 Jumpserver)
+   1. Visit http://$HOST:8080 (访问 http://你的主机IP:8080 来访问 iotserver)
 
    2. Click left navigation visit Applications-Terminal and accept coco and luna register
       (点击左侧 应用程序接受 Coco注册)
@@ -62,32 +62,32 @@ $ docker run -p 8080:80 -p 2222:2222 jumpserver/jumpserver:0.5.0-beta2
 
 ### Snapshot 截图
 
-    https://github.com/jumpserver/jumpserver/issues/438
+    https://github.com/iotserver/iotserver/issues/438
 
 
 ### Demo
 
 demo使用了开发者模式，并发只能为1
 
-- Jumpserver: [访问](http://demo.ddsiot.cn:8080)  账号: admin 密码: admin
+- iotserver: [访问](http://demo.ddsiot.cn:8080)  账号: admin 密码: admin
 
 - Coco: ssh -p 2222 admin@demo.ddsiot.cn 密码: admin
 
 ### ROADMAP
 
-参见 https://github.com/jumpserver/jumpserver/milestone/2
+参见 https://github.com/iotserver/iotserver/milestone/2
 
 ### SDK
 
-- python: https://github.com/jumpserver/jumpserver-python-sdk
-- java: https://github.com/KaiJunYan/jumpserver-java-sdk.git
+- python: https://github.com/iotserver/iotserver-python-sdk
+- java: https://github.com/KaiJunYan/iotserver-java-sdk.git
 
 ### Docs 开发者文档
 
 
-   * [Project structure 项目结构描述](https://github.com/jumpserver/jumpserver/blob/dev/docs/project_structure.md)
-   * [Code style Python代码规范](https://github.com/jumpserver/jumpserver/blob/dev/docs/python_style_guide.md)
-   * [Api style API设计规范](https://github.com/jumpserver/jumpserver/blob/dev/docs/api_style_guide.md)
+   * [Project structure 项目结构描述](https://github.com/iotserver/iotserver/blob/dev/docs/project_structure.md)
+   * [Code style Python代码规范](https://github.com/iotserver/iotserver/blob/dev/docs/python_style_guide.md)
+   * [Api style API设计规范](https://github.com/iotserver/iotserver/blob/dev/docs/api_style_guide.md)
 
 ### Contributor 贡献者
 #### 0.4.0

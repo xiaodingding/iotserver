@@ -141,12 +141,12 @@ $(document).ready(function () {
   $('.select2.asset-select').select2()
     .on('select2:select', function(evt) {
       var data = evt.params.data;
-      jumpserver.assets_selected[data.id] = data.text;
-      console.log(jumpserver.assets_selected)
+      iotserver.assets_selected[data.id] = data.text;
+      console.log(iotserver.assets_selected)
     })
     .on('select2:unselect', function(evt) {
       var data = evt.params.data;
-      delete jumpserver.assets_selected[data.id]
+      delete iotserver.assets_selected[data.id]
     });
 
 	var options = {
@@ -176,7 +176,7 @@ $(document).ready(function () {
 			{data: "comment" }, {data: "isstore" }, {data: "id"}],
 		op_html: $('#actions').html()
 	};
-	jumpserver.initDataTable(options);
+	iotserver.initDataTable(options);
 })
 
 

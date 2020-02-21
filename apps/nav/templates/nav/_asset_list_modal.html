@@ -138,7 +138,7 @@ function initAssetModalTable() {
         select_style: assetModalOption.selectStyle,
         paging_numbers_length: 3
     };
-    assetModalTable = jumpserver.initServerSideDataTable(options);
+    assetModalTable = iotserver.initServerSideDataTable(options);
     if (assetModalOption.onModalTableDone) {
         assetModalOption.onModalTableDone(assetModalTable);
     }
