@@ -1,0 +1,81 @@
+{% load i18n %}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title" id="myModalLabel"> </h4>
+</div>
+
+<div class="modal-body" style="padding-bottom: 0px;">
+
+        <table class="table table-bordered">
+              <caption class="col-md-offset-5">{{ datapoint.name }} </caption>
+            <tbody>
+            <tr class="no-borders-tr" >
+                <td width="20%">{% trans 'Name' %}:</td>
+                <td colspan="2"><b>{{ datapoint.name }}</b></td>
+
+                <td>{% trans 'Comment' %}:</td>
+                <td colspan="2"><b>{{ datapoint.comment }}</b></td>
+
+            </tr>
+            <tr>
+                <td>{% trans 'Data Mode' %}:</td>
+                <td colspan="2"><b>{{ datapoint.data_mode }}</b></td>
+                 <td>{% trans 'Data Type' %}:</td>
+                <td colspan="2"><b>{{ datapoint.data_type }}</b></td>
+            </tr>
+
+            <tr class="active">
+                <td>{% trans 'Slave Id' %}:</td>
+                <td><b>{{ datapoint.slave_addr }}</b></td>
+
+                <td>{% trans 'Register Addr' %}:</td>
+                <td><b>{{ datapoint.registaddr }}</b></td>
+
+                <td>{% trans 'Data Len' %}:</td>
+                <td><b>{{ datapoint.data_len }}</b></td>
+            </tr>
+
+            <tr>
+                <td>{% trans 'Express' %}:</td>
+                <td colspan="2"><b>{{ datapoint.expre }}</b></td>
+
+                <td>{% trans 'IsStore' %}:</td>
+                <td colspan="2"><b>{{ datapoint.isstore }}</b></td>
+            </tr>
+            <tr>
+                <td>{% trans 'Data Uint' %}:</td>
+                <td colspan="2"><b>{{ datapoint.data_uint }}</b></td>
+
+                <td>{% trans 'Key' %}:</td>
+                <td colspan="2"><b>{{ datapoint.data_key }}</b></td>
+            </tr>
+            <tr>
+                <td>{% trans 'Date created' %}:</td>
+                <td colspan="2"><b>{{ datapoint.date_created }}</b></td>
+
+                <td>{% trans 'Created by' %}:</td>
+                <td colspan="2"><b>{{ datapoint.created_by  }}</b></td>
+            </tr>
+
+            </tbody>
+        </table>
+
+</div>
+
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" id="close-btn">取消</button>
+
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#close-btn').on('click',function(){
+        $('#modal').modal('hide');
+    });
+});
+
+</script>

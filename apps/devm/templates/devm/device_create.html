@@ -1,0 +1,190 @@
+{% extends '_base_create_update.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+
+
+
+{% block form %}
+    <form action="" method="post" class="form-horizontal">
+    {% if form.non_field_errors %}
+         <div class="alert alert-danger">
+             {{ form.non_field_errors }}
+         </div>
+    {% endif %}
+    {% csrf_token %}
+    <h3>{% trans 'Basic' %}</h3>
+    {% bootstrap_field form.name layout="horizontal" %}
+    {% bootstrap_field form.type layout="horizontal" %}
+    {% bootstrap_field form.protocol layout="horizontal" %}
+    {% bootstrap_field form.device_sn layout="horizontal" %}
+    {% bootstrap_field form.device_pwd layout="horizontal" %}
+
+
+
+   <div class="form-group">
+    <label  for="inputfile" class="col-md-2 control-label">{% trans 'Device Ico' %}</label>
+        <div class="col-md-1">
+            <img src="{{ device.device_ico }}" id="device_ico_id" align="left" width="120px" height="120px"  class="img-responsive" alt="{% trans 'Device Ico' %}" >
+        </div>
+       <div class="col-md-8">
+            <input type="text" name="device_ico" maxlength="1024" class="col-md-5"
+                   placeholder="{% trans 'Device Ico' %}" id="id_device_ico" value="{{  device.device_ico }}"
+			   placeholder="请输入名称" align="center"  readonly >
+
+            <input type="file" name="file" id="fileupload" align="right" style=""  onchange="xmTanUploadImg(this)" accept="image/*">
+			<button id="rechooseFile" type="button" class="btn btn-primary">重新选择</button>
+       </div>
+
+
+  </div>
+
+
+
+    {% bootstrap_field form.device_lng layout="horizontal" %}
+    {% bootstrap_field form.device_addr layout="horizontal" %}
+
+    <div class="hr-line-dashed"></div>
+    <h3>{% trans 'Group' %}</h3>
+    {% bootstrap_field form.groups layout="horizontal" %}
+
+    <div class="hr-line-dashed"></div>
+    <h3>{% trans 'DataTemplet' %}</h3>
+    {% bootstrap_field form.datatemplet layout="horizontal" %}
+
+    <div class="hr-line-dashed"></div>
+    <h3>{% trans 'Other' %}</h3>
+    {% bootstrap_field form.comment layout="horizontal" %}
+    {% bootstrap_field form.is_active layout="horizontal" %}
+
+
+
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-2">
+            <button class="btn btn-default" type="reset"> {% trans 'Reset' %}</button>
+            <button id="submit_button" class="btn btn-primary" type="submit">{% trans 'Submit' %}</button>
+        </div>
+    </div>
+    </form>
+{% endblock %}
+
+{% block custom_foot_js %}
+    <script>
+        $(document).ready(function () {
+
+             $('#uploadFile').hide();
+             $('#rechooseFile').hide();
+
+            $('.select2').select2();
+            $("#id_tags").select2({
+                tags: true,
+                maximumSelectionLength: 8  //最多能够选择的个数
+                //closeOnSelect: false
+            });
+
+
+        });
+
+
+        function SaveImg(obj) {
+             var file = obj.files[0];
+             var formData = new FormData();
+             formData.append('file', file);
+
+
+            $.ajax({
+                url: '{% url "fileupload:upload-new" %}',
+                type: "post",
+                data: formData,
+                contentType: false,
+                processData: false,
+                mimeType: "multipart/form-data",
+                success: function (data) {
+                    succ = JSON.parse(data);
+                    url = succ.files[0].url;
+                    console.log(url);
+                    $('#id_device_ico').val(url);
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert(data);
+                }
+            });
+        }
+
+
+        function ReadUploadImg(obj) {
+            var file = obj.files[0];
+
+                console.log(obj);console.log(file);
+                console.log("file.size = " + file.size);  //file.size 单位为byte
+
+                var reader = new FileReader();
+
+                //读取文件过程方法
+                reader.onloadstart = function (e) {
+                    console.log("开始读取....");
+                }
+                reader.onprogress = function (e) {
+                    console.log("正在读取中....");
+                }
+                reader.onabort = function (e) {
+                    console.log("中断读取....");
+                }
+                reader.onerror = function (e) {
+                    console.log("读取异常....");
+                }
+                reader.onload = function (e) {
+                    console.log("成功读取....");
+
+                    var img = document.getElementById("device_ico_id");
+                    img.src = e.target.result;
+                    //或者 img.src = this.result;  //e.target == this
+
+                }
+
+                reader.readAsDataURL(file)
+
+
+        }
+
+
+         //选择图片，马上预览
+            function xmTanUploadImg(obj) {
+
+
+                var array = new Array('gif', 'jpeg', 'png', 'jpg');  //可以上传的文件类型
+                if (obj.value == '') {
+                    alert("让选择要上传的图片!");
+                    return false;
+                }
+                else {
+                    var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用：）
+                    var isExists = false;
+                    for (var i in array) {
+                        if (fileContentType.toLowerCase() == array[i].toLowerCase()) {
+                            isExists = true;
+                            break;
+                        }
+                    }
+                    if (isExists == false) {
+                        obj.value = null;
+                        alert("上传图片类型不正确!");
+                        return false;
+                    }else {
+                        ReadUploadImg(obj);
+                        SaveImg(obj);
+                        $('#uploadFile').show();
+                        $('#rechooseFile').show();
+                        return true;
+                    }
+
+                }
+            }
+
+
+
+    </script>
+{% endblock %}

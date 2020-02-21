@@ -1,0 +1,167 @@
+{% extends '_base_list.html' %}
+{% load i18n static %}
+{% block custom_head_css_js %}
+
+        <script src="{% static 'js/number_cluster.js' %}"></script>
+        <!--高德地图-->
+        <script src="http://webapi.amap.com/maps?v=1.2&key=c1bd24ebbba2cdd8d6e0f129c71e8d76"></script>
+        <script src="{% static 'js/adapters/amap.js' %}"></script>
+
+        <!--腾讯地图-->
+        <script src="http://map.qq.com/api/js?v=2.exp"></script>
+        <script src="{% static 'js/adapters/qq.js' %}"></script>
+
+        <!--谷歌地图-->
+{#      <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyA886cdgLhXBlny3cMba1l_GXpMTB2w5sg&sensor=false"></script>  #}
+{#      <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.13/src/infobox.js"></script>  #}
+{#      <script src="{% static 'js/adapters/google.js' %}"></script>  #}
+
+         <!--百度地图-->
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=76ccf7bcb17d5c55dd1514aad45cfeba"></script>
+	    <script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+	    <script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+        <script src="{% static 'js/adapters/baidu.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+                <div class="col-sm-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-success pull-right">Users</span>
+                            <h5>用户总数</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><a href="{% url 'users:user-list' %}">{{ users_count }}</a></h1>
+                            <small>All user</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-info pull-right">Hosts</span>
+                            <h5>主机总数</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><a href="{% url 'assets:asset-list' %}">{{ assets_count }}</a></h1>
+                            <small>All host</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <span class="label label-primary pull-right">Online</span>
+                            <h5>在线用户</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins"><a href="{% url 'audits:proxy-log-online-list' %}"> <span id="online_users"></span>{{ online_user_count }}</a></h1>
+                            <small>Online user</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">Connected</span>
+                    <h5>已连接服务器</h5>
+                </div>
+                <div class="ibox-content">
+                        <h1 class="no-margins"><a href="{% url 'audits:proxy-log-online-list' %}"> <span id="online_hosts"></span>{{ online_asset_count }}</a></h1>
+                    <small>Connected host</small>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+                <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>
+                        {{ action }}
+                    </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="" id="content_start">
+                            <!--地图容器-->
+                            <div style="width:100%;height:350px;border:#ccc solid 1px;" id="maps"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+
+
+{% endblock %}
+{% block custom_foot_js %}
+        <script>
+        var numbers = [
+            {
+                "lng" : 121.44,
+                "lat" : 31.32,
+                "number" : 5
+            },
+            {
+                "lng" : 121.44,
+                "lat" : 31.35,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.20,
+                "number" : 19
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.23,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.26,
+                "number" : 21
+            },
+            {
+                "lng" : 121.50,
+                "lat" : 31.23,
+                "number" : 12
+            }
+        ];
+        var numberCluster = new maps.NumberCluster({
+            "center" : {
+                "lng" : 121.47,
+                "lat" : 31.23
+            },
+            "containerId" : "maps",
+            "adapters" : {
+                "amap" : "高德",
+                "baidu":"百度",
+                "qq" : "腾讯",
+                "google" : "谷歌"
+            },
+            "adaptersSwitch" : {
+                "show" : true,
+                "changeHash" : false,
+                "id" : "mapsAdaptersSwitch"
+            },
+            "defaultAdapter" : "qq"
+        });
+        numberCluster.addNumbers(numbers);
+        </script>
+{% endblock %}

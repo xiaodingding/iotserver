@@ -1,0 +1,80 @@
+{% load i18n %}
+<li id="index">
+    <a href="{% url 'index' %}">
+        <i class="fa fa-dashboard" style="font-size: 13px"></i> <span class="nav-label">{% trans 'Dashboard' %}</span><span class="label label-info pull-right"></span>
+    </a>
+</li>
+<li id="users">
+    <a href="#">
+        <i class="fa fa-group" style="font-size: 13px"></i> <span class="nav-label">{% trans 'Users' %}</span><span class="fa arrow"></span>
+    </a>
+    <ul class="nav nav-second-level active">
+        <li id="user"><a href="{% url 'users:user-list' %}">{% trans 'User' %}</a></li>
+        <li id="user-group"><a href="{% url 'users:user-group-list' %}">{% trans 'User group' %}</a></li>
+        <li id="login-log"><a href="{% url 'users:login-log-list' %}">{% trans 'Login logs' %}</a></li>
+    </ul>
+</li>
+<li id="Identify">
+    <a>
+        <i class="fa fa-inbox"></i> <span class="nav-label">{% trans 'Identify' %}</span><span class="fa arrow"></span>
+    </a>
+    <ul class="nav nav-second-level">
+        <li id="identify"><a href="{% url 'identify:identify-list' %}">{% trans 'Identify' %}</a></li>
+    </ul>
+</li>
+<li id="perms">
+    <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">{% trans 'Navigation' %}</span><span class="fa arrow"></span></a>
+    <ul class="nav nav-second-level">
+        <li id="nav-list">
+            <a href="{% url 'nav:category-site-list' %}">{% trans 'Category Site Tress List' %}</a>
+            <a href="{% url 'nav:category-list' %}">{% trans 'Category List' %}</a>
+            <a href="{% url 'nav:site-list' %}">{% trans 'Site List' %}</a>
+            <a href="{% url 'nav:siteinfo-list' %}">{% trans 'Site Info List' %}</a>
+        </li>
+    </ul>
+</li>
+<li id="terminal">
+    <a>
+        <i class="fa fa-rocket"></i> <span class="nav-label">{% trans 'Sessions' %}</span><span class="fa arrow"></span>
+    </a>
+    <ul class="nav nav-second-level">
+        <li id="terminal"><a href="{% url 'terminal:terminal-list' %}">{% trans 'Terminal' %}</a></li>
+    </ul>
+</li>
+<li id="ops">
+    <a>
+        <i class="fa fa-coffee"></i> <span class="nav-label">{% trans 'Job Center' %}</span><span class="fa arrow"></span>
+    </a>
+    <ul class="nav nav-second-level">
+        <li id="task"><a href="{% url 'ops:task-list' %}">{% trans 'Task' %}</a></li>
+    </ul>
+</li>
+<li id="devm">
+    <a>
+        <i class="fa fa-apple"></i> <span class="nav-label">{% trans 'Devm' %}</span><span class="fa arrow"></span>
+    </a>
+    <ul class="nav nav-second-level active">
+        <li id="device-list"><a href="{% url 'devm:device-list' %}">{% trans 'device-list' %}</a></li>
+        <li id="device-group"><a href="{% url 'devm:device-group-list' %}">{% trans 'device-group-list' %}</a></li>
+        <li id="data-templet"><a href="{% url 'devm:data-templet-list' %}">{% trans 'data-templet-list' %}</a></li>
+    </ul>
+</li>
+{#<li id="">#}
+{#    <a href="#">#}
+{#        <i class="fa fa-download"></i> <span class="nav-label">{% trans 'File' %}</span><span class="fa arrow"></span>#}
+{#    </a>#}
+{#    <ul class="nav nav-second-level">#}
+{#        <li id="upload"><a href="">{% trans 'File upload' %}</a></li>#}
+{#        <li id="download"><a href="">{% trans 'File download' %}</a></li>#}
+{#    </ul>#}
+{#</li>#}
+<li id="system">
+    <a >
+        <i class="fa fa-gears"></i> <span class="nav-label">{% trans 'System Manager' %}</span><span class="fa arrow"></span>
+    </a>
+     <ul class="nav nav-second-level">
+        <li id="sys-setting"><a href="{% url 'settings:basic-setting' %}">{% trans 'System Setting' %}</a></li>
+        <li id="sys-notice"><a href="{% url 'sysmanager:notice-list' %}">{% trans 'System Notice' %}</a></li>
+    </ul>
+</li>
+

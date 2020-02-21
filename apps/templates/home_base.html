@@ -1,0 +1,24 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="shortcut icon" href="{% static 'img/facio.ico' %}" type="image/x-icon">
+
+     {% include 'helpmd/_head_css_js.html' %}
+
+    {% block custom_head_css_js %} {% endblock %}
+
+</head>
+
+<body class="top-navigation pace-done" style="background-color: #F3F3F4">
+
+    {% block knowledge_inner %}
+    {% endblock knowledge_inner %}
+</body>
+{% include "helpmd/foot.html" %}
+{% block custom_foot_js %} {% endblock %}
+</html>

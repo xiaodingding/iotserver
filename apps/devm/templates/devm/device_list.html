@@ -1,0 +1,260 @@
+{% extends '_base_list.html' %}
+{% load i18n static %}
+{% block custom_head_css_js %}
+<link href="{% static 'css/plugins/select2/select2.min.css' %}" rel="stylesheet">
+<script src="{% static 'js/plugins/select2/select2.full.min.js' %}"></script>
+
+
+
+<script src="{% static 'js/number_cluster.js' %}"></script>
+<!--高德地图-->
+<script src="http://webapi.amap.com/maps?v=1.2&key=c1bd24ebbba2cdd8d6e0f129c71e8d76"></script>
+<script src="{% static 'js/adapters/amap.js' %}"></script>
+
+<!--腾讯地图-->
+<script src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="{% static 'js/adapters/qq.js' %}"></script>
+
+<!--谷歌地图-->
+{#      <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyA886cdgLhXBlny3cMba1l_GXpMTB2w5sg&sensor=false"></script>  #}
+{#      <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.13/src/infobox.js"></script>  #}
+{#      <script src="{% static 'js/adapters/google.js' %}"></script>  #}
+
+ <!--百度地图-->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=76ccf7bcb17d5c55dd1514aad45cfeba"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+<script src="{% static 'js/adapters/baidu.js' %}"></script>
+
+{% endblock %}
+
+{% block map_content %}
+        <div class="row">
+                <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>
+                        {{ action }}
+                    </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="" id="content_start">
+                            <!--地图容器-->
+                            <div style="width:100%;height:350px;border:#ccc solid 1px;" id="maps"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+{% endblock %}
+
+{% block table_search %}{% endblock %}
+{% block table_container %}
+<div class="uc pull-left m-l-5 m-r-5">
+    <a href="{% url "devm:device-create" %}" class="btn btn-sm btn-primary"> {% trans "Create Device" %} </a>
+</div>
+<table class="table table-striped table-bordered table-hover " id="device_list_table" >
+    <thead>
+    <tr>
+        <th class="text-center">
+            <input type="checkbox" id="check_all" class="ipt_check_all" >
+        </th>
+        <th class="text-center"><a href="{% url 'devm:device-list' %}?sort=name">{% trans 'Name' %}</a></th>
+        <th class="text-center">{% trans 'Type' %}</th>
+        <th class="text-center">{% trans 'Comment' %}</th>
+        <th class="text-center">{% trans 'Device Address' %}</th>
+        <th class="text-center">{% trans 'Active' %}</th>
+        <th class="text-center">{% trans 'Date joined' %}</th>
+        <th class="text-center">{% trans 'Alive' %}</th>
+        <th class="text-center">{% trans 'Action' %}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div id="actions" class="hide">
+    <div class="input-group">
+        <select class="form-control m-b" style="width: auto" id="slct_bulk_update">
+            <option value="delete">{% trans 'Delete selected' %}</option>
+        </select>
+        <div class="input-group-btn pull-left" style="padding-left: 5px;">
+            <button id='btn_bulk_update' style="height: 32px;"  class="btn btn-sm btn-primary">
+                {% trans 'Submit' %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content_bottom_left %}{% endblock %}
+{% block custom_foot_js %}
+<script>
+$(document).ready(function(){
+    var options = {
+        ele: $('#device_list_table'),
+        columnDefs: [
+            {targets: 1, createdCell: function (td, cellData, rowData) {
+                var detail_btn = '<a href="{% url "devm:device-detail" pk=99991937 %}">' + cellData + '</a>';
+                $(td).html(detail_btn.replace('99991937', rowData.id));
+             }},
+            {targets: 5, createdCell: function (td, cellData) {
+                if (!cellData) {
+                    $(td).html('<i class="fa fa-times text-danger"></i>')
+                } else {
+                    $(td).html('<i class="fa fa-check text-navy"></i>')
+                }
+             }},
+             {targets: 7, createdCell: function (td, cellData) {
+                if (cellData == 'Unknown'){
+                    $(td).html('<i class="fa fa-circle text-warning"></i>')
+                } else if (!cellData) {
+                    $(td).html('<i class="fa fa-circle text-danger"></i>')
+                } else {
+                    $(td).html('<i class="fa fa-circle text-navy"></i>')
+                }
+            }},
+            {targets: 8, createdCell: function (td, cellData, rowData) {
+                if(cellData) {
+                    var update_btn = '<a href="{% url "devm:device-update" pk=99991937 %}" class="btn btn-xs btn-info">{% trans "Update" %}</a>'.replace('99991937', cellData);
+                    var del_btn = '<a class="btn btn-xs btn-danger m-l-xs btn_device_delete" data-uid="99991937">{% trans "Delete" %}</a>'.replace('99991937', cellData);
+                    $(td).html(update_btn + del_btn)
+                }
+             }}],
+        ajax_url: '{% url "api-devm:device-list" %}',
+        columns: [{data: function(){return ""}}, {data: "name" }, {data: "get_type_display" }, {data: "comment" }, {data: "device_addr" },
+                  {data: "status" }, {data: "date_created" },{data: "is_online"},{data: "id" }],
+        op_html: $('#actions').html()
+    };
+    jumpserver.initDataTable(options);
+})
+
+.on('click', '.btn_device_delete', function () {
+    var $this = $(this);
+    var $data_table = $('#device_list_table').DataTable();
+    var name = $(this).closest("tr").find(":nth-child(2)").children('a').html();
+    var uid = $this.data('uid');
+    var the_url = '{% url "api-devm:device-detail" pk=99991937 %}'.replace('99991937', uid);
+    objectDelete($this, name, the_url);
+    setTimeout( function () {
+        $data_table.ajax.reload();
+    }, 3000);
+})
+
+.on('click', '#btn_bulk_update', function () {
+    var action = $('#slct_bulk_update').val();
+    var $data_table = $('#device_list_table').DataTable();
+    var id_list = [];
+    var plain_id_list = [];
+    $data_table.rows({selected: true}).every(function(){
+        id_list.push({id: this.data().id});
+        plain_id_list.push(this.data().id);
+    });
+    if (id_list === []) {
+        return false;
+    }
+    var the_url = "{% url 'api-devm:device-list' %}";
+    function doDelete() {
+        swal({
+            title: "{% trans 'Are you sure?' %}",
+            text: "{% trans 'This will delete the selected device' %}",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{% trans 'Confirm' %}",
+            closeOnConfirm: false
+        }, function() {
+            var success = function() {
+                var msg = "{% trans 'Device Deleted.' %}";
+                swal("{% trans 'Device Delete' %}", msg, "success");
+                $('#device_list_table').DataTable().ajax.reload();
+            };
+            var fail = function() {
+                var msg = "{% trans 'Device Deleting failed.' %}";
+                swal("{% trans 'Device Delete' %}", msg, "error");
+            };
+            var url_delete = the_url + '?id__in=' + JSON.stringify(plain_id_list);
+            APIUpdateAttr({url: url_delete, method: 'DELETE', success: success, error: fail});
+            $data_table.ajax.reload();
+            jumpserver.checked = false;
+        });
+    }
+    switch (action) {
+        case 'delete':
+            doDelete();
+            break;
+        default:
+            break;
+    }
+});
+
+
+ var numbers = [
+            {
+                "lng" : 121.44,
+                "lat" : 31.32,
+                "number" : 5
+            },
+            {
+                "lng" : 121.44,
+                "lat" : 31.35,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.20,
+                "number" : 19
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.23,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.26,
+                "number" : 21
+            },
+            {
+                "lng" : 121.50,
+                "lat" : 31.23,
+                "number" : 12
+            }
+        ];
+        var numberCluster = new maps.NumberCluster({
+            "center" : {
+                "lng" : 121.47,
+                "lat" : 31.23
+            },
+            "containerId" : "maps",
+            "adapters" : {
+                "amap" : "高德",
+                "baidu":"百度",
+                "qq" : "腾讯",
+                "google" : "谷歌"
+            },
+            "adaptersSwitch" : {
+                "show" : true,
+                "changeHash" : false,
+                "id" : "mapsAdaptersSwitch"
+            },
+            "defaultAdapter" : "qq"
+        });
+        numberCluster.addNumbers(numbers);
+
+</script>
+{% endblock %}
+
+
+

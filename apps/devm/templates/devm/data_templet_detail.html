@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block custom_head_css_js %}
+    <link href="{% static "css/plugins/select2/select2.min.css" %}" rel="stylesheet">
+    <script src="{% static "js/plugins/select2/select2.full.min.js" %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="" class="text-center"><i class="fa fa-laptop"></i> {% trans 'Detail' %} </a></li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-default" href="{% url 'devm:device-group-update' pk=data_templet.id %}"><i class="fa fa-edit"></i>{% trans 'Update' %}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="col-sm-12" style="padding-left: 0">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <span style="float: left"></span>{% trans 'Data Point List of' %} <b>{{ data_templet.name }}</b></span>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="uc pull-left m-l-5 m-r-5">
+                                        <a href="{% url "devm:data-point-create" %}?templet_id={{ data_templet.id }}" class="btn btn-sm btn-primary"> {% trans "Create Data Point" %} </a>
+                                    </div>
+                                    <table class="table  table-bordered table-hover " id="datapoint_list_table" >
+                                        <thead>
+                                            <tr>
+                                                <th>{% trans 'Name' %}</th>
+                                                <th>{% trans 'Key' %}</th>
+                                                <th>{% trans 'Data Uint' %}</th>
+                                                <th>{% trans 'Uint Name' %}</th>
+                                                <th>{% trans 'Data Type' %}</th>
+                                                <th>{% trans 'Comment' %}</th>
+                                                <th>{% trans 'IsStore' %}</th>
+                                                <th>{% trans 'Action' %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" id="box">
+        <!--此部分为主体内容，将远程加载进来-->
+      </div>
+    </div>
+    </div>
+
+{% endblock %}
+{% block custom_foot_js %}
+<script>
+
+function leaveGroup(obj, name, url, data) {
+    function doDelete() {
+        var body = data;
+        var success = function() {
+            swal('Deleted!', "[ "+name+"]"+" has been deleted ", "success");
+            $(obj).parent().parent().remove();
+        };
+        var fail = function() {
+            swal("Failed", "Delete"+"[ "+name+" ]"+"failed", "error");
+        };
+        APIUpdateAttr({
+            url: url,
+            body: JSON.stringify(body),
+            method: 'PATCH',
+            success: success,
+            error: fail
+        });
+    }
+    swal({
+        title: 'Are you sure delete ?',
+        text: " [" + name + "] ",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: 'Confirm',
+        closeOnConfirm: false
+    }, function () {
+        doDelete()
+    });
+}
+
+
+
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+		if (index > -1) {
+		this.splice(index, 1);
+	}
+};
+
+Array.prototype.unique = function(){
+	var res = [];
+	var json = {};
+ 	for(var i = 0; i < this.length; i++){
+  		if(!json[this[i]]){
+   			res.push(this[i]);
+   			json[this[i]] = 1;
+  		}
+ 	}
+ 	return res;
+};
+
+$(document).ready(function () {
+	$('.select2').select2();
+
+  $('.select2.asset-select').select2()
+    .on('select2:select', function(evt) {
+      var data = evt.params.data;
+      jumpserver.assets_selected[data.id] = data.text;
+      console.log(jumpserver.assets_selected)
+    })
+    .on('select2:unselect', function(evt) {
+      var data = evt.params.data;
+      delete jumpserver.assets_selected[data.id]
+    });
+
+	var options = {
+		ele: $('#datapoint_list_table'),
+		buttons: [],
+		order: [],
+		columnDefs: [
+			{targets: 0, createdCell: function (td, cellData, rowData) {
+				var detail_btn = '<a href="#" onclick="modal_show(this)" name="'+rowData.id+'"  data-aid="'+rowData.id+'">' + cellData + '</a>';
+				$(td).html(detail_btn.replace('99991937', rowData.id));
+			}},
+			{targets: 6, createdCell: function (td, cellData) {
+				if (!cellData) {
+					$(td).html('<i class="fa fa-times text-danger"></i>')
+				} else {
+					$(td).html('<i class="fa fa-check text-navy"></i>')
+				}
+			}},
+			{targets: 7, createdCell: function (td, cellData, rowData) {
+				var update_btn = '<a href="{% url "devm:data-point-update" pk=99991937 %}?templet_id={{ data_templet.id }}" class="btn btn-xs btn-info">{% trans "Update" %}</a>'.replace('99991937', rowData.id);
+				var del_btn = '<a class="btn btn-xs btn-danger m-l-xs btn_point_delete" data-uid="99991937">{% trans "Remove" %}</a>'.replace('99991937', rowData.id);
+				$(td).html(update_btn + del_btn)
+			}}
+		],
+		ajax_url: '{% url "api-devm:data-point-list" %}?data_templet_id={{ data_templet.id }}',
+		columns: [{data: "name" },{data: "data_key" }, {data: "data_uint" }, {data: "uint_name" }, {data: "data_type" },
+			{data: "comment" }, {data: "isstore" }, {data: "id"}],
+		op_html: $('#actions').html()
+	};
+	jumpserver.initDataTable(options);
+})
+
+
+
+.on('click', '.btn_point_delete', function () {
+    var $this = $(this);
+    var $data_table = $('#datapoint_list_table').DataTable();
+    var name = $(this).closest("tr").find(":nth-child(1)").children('a').html();
+    var uid = $this.data('uid');
+    var the_url = '{% url "api-devm:data-point-detail" pk=99991937 %}'.replace('99991937', uid);
+    objectDelete($this, name, the_url);
+    setTimeout( function () {
+        $data_table.ajax.reload();
+    }, 3000);
+})
+
+
+function modal_show(md) {
+    var k = md;
+    point_id = k.name;
+
+    console.log("point_id:"+ point_id);
+    var url = "{% url 'devm:data-point-modal'  pk=99991937 %}".replace('99991937', point_id);
+    $('#modal').modal({
+        show: false,
+        backdrop: 'static',
+        keyboard: 'false',
+        remote:url
+    });
+    $('#modal').modal('show');
+ $('#modal').on('show.bs.modal',function(){
+        //alert('当调用show方法时，立即触发；')
+    });
+
+    $('#modal').on('shown.bs.modal',function(){
+        //alert('当弹窗完全加载完后，再触发；')
+    });
+
+    $('#modal').on('hide.bs.modal',function(){
+        //alert('当关闭时，立即触发；')
+    });
+
+    $('#modal').on('hidden.bs.modal',function(){
+        //alert('当关完全关闭后，再触发；')
+        window.location.reload();
+    });
+
+    $('#modal').on('loaded.bs.modal',function(){
+        //alert('当远程数据加载完毕后，再触发；')
+    });
+
+}
+
+
+</script>
+{% endblock %}

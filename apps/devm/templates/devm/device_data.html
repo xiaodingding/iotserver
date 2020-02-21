@@ -1,0 +1,120 @@
+{% extends '_base_data.html' %}
+{% load i18n static %}
+
+
+
+{% block row_content %}
+        <div class="row">
+                <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>
+                        {{ action }}
+                    </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="" id="content_start">
+                            <!--数据展示-->
+                            <div style="width:100%;height:350px;" id="history"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+{% endblock %}
+
+
+{% block custom_foot_js %}
+<script src="{% static 'js/plugins/echarts/echarts-all.js' %}"></script>
+
+
+<script type="text/javascript">
+
+var data_item = {{data_point_nbr}};
+var dom = document.getElementById("history");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+myChart.showLoading();
+
+var history_url = "{% url 'api-devm:data-history'%}?device_id={{device.id}}";
+$.getJSON(history_url).done(function (data) {
+    myChart.hideLoading();
+
+    myChart.setOption(option = {
+        title: {
+            text: '{{datapoint.name}}'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+        data: data.map(function (item) {
+                return item[0];
+            })
+        },
+        yAxis: {
+            axisLabel: {
+            formatter: '{value} {{datapoint.data_uint}}'
+            },
+            splitLine: {
+                    show: true
+                }
+
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: { //数据视图
+                    show: true
+                },
+                restore: { //重置
+                    show: true
+                },
+                dataZoom: { //数据缩放视图
+                    show: true
+                },
+                saveAsImage: {//保存图片
+                    show: true
+                },
+                magicType: {//动态类型切换
+                    type: ['bar', 'line','scatter']
+                }
+            }
+        },
+        dataZoom: [{
+            type: 'inside', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 10,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+        }],
+        series: [{
+            name: '{{datapoint.name}}',
+            type: 'line',
+            data:  data.map(function (item) {
+                    return item[data_item];
+                })
+        }]
+    });
+});
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+
+
+</script>
+{% endblock %}
+
+
+

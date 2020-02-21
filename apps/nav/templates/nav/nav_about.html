@@ -1,0 +1,58 @@
+{% extends 'nav/_nav_base.html' %}
+{% load static %}
+
+
+{% block main-content %}
+
+{{ about_tag|safe  }}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <!-- 关于网站 -->
+            <h4 class="text-gray"><a href="{% url "nav:index" %}">关于网站</a></h4>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                    </div>
+                </div>
+                <!-- 关于站长 -->
+                <h4 class="text-gray">关于站长</h4>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="xe-widget xe-conversations box2 label-info" onclick="window.open('https://www.ddsiot.cn/', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="https://ddsiot.cn">
+                            <div class="xe-comment-entry">
+                                <a class="xe-user-img">
+                                    <img src="{% static 'assets/images/logos/viggoz.png ' %}" class="img-circle" width="40">
+                                </a>
+                                <div class="xe-comment">
+                                    <a href="#" class="xe-user-name overflowClip_1">
+                                        <strong>Designer. dwx.</strong>
+                                    </a>
+                                    <p class="overflowClip_2"> 一个已入坑的嵌入式软硬件工程师.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+{% block custom_func_js %}
+$("a.smooth").click(function(e) {
+    href = $(this).attr("href");
+    window.location.href="{% url "nav:index" %}"+href;
+});
+{% endblock %}

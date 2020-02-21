@@ -1,0 +1,533 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block custom_head_css_js %}
+    <link href="{% static "css/plugins/select2/select2.min.css" %}" rel="stylesheet">
+    <script src="{% static "js/plugins/select2/select2.full.min.js" %}"></script>
+
+    <script src="{% static 'js/number_cluster.js' %}"></script>
+    <!--高德地图-->
+    <script src="http://webapi.amap.com/maps?v=1.2&key=c1bd24ebbba2cdd8d6e0f129c71e8d76"></script>
+    <script src="{% static 'js/adapters/amap.js' %}"></script>
+
+    <!--腾讯地图-->
+    <script src="http://map.qq.com/api/js?v=2.exp"></script>
+    <script src="{% static 'js/adapters/qq.js' %}"></script>
+
+    <!--谷歌地图-->
+{#      <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyA886cdgLhXBlny3cMba1l_GXpMTB2w5sg&sensor=false"></script>  #}
+{#      <script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.13/src/infobox.js"></script>  #}
+{#      <script src="{% static 'js/adapters/google.js' %}"></script>  #}
+
+     <!--百度地图-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=76ccf7bcb17d5c55dd1514aad45cfeba"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script src="{% static 'js/adapters/baidu.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="panel-options">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="{% url 'devm:device-detail' pk=device.id %}" class="text-center"><i class="fa fa-laptop"></i> {% trans 'Detail' %} </a>
+                            </li>
+
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-default" href="{% url 'devm:device-update' pk=device.id %}"><i class="fa fa-edit"></i>Update</a>
+                            </li>
+                            <li class="pull-right">
+                                <a class="btn btn-outline btn-danger btn-delete-device">
+                                    <i class="fa fa-edit"></i>Delete
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="col-sm-7" style="padding-left: 0;">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <b>{{ device.name }}</b>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="ibox-content">
+
+                                        <table class="table">
+                                        <tbody>
+                                        <tr>
+                                              <th rowspan="10" style="width:408px;">
+                                                    <img src={{device.img_url}} style="width: 408px;height: 287px;">
+                                              </th>
+                                        </tr>
+                                        <tr class="no-borders-tr">
+                                            <td width="20%">{% trans 'Name' %}:</td>
+                                            <td><b>{{ device.name }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Active' %}:</td>
+                                            <td><b>{{ device.is_valid }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Device SN' %}:</td>
+                                            <td><b>{{ device.device_sn }}</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>{% trans 'Device Longitude' %}:</td>
+                                            <td><b>{{ device.device_lng }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Device Address' %}:</td>
+                                            <td><b>{{ device.device_addr }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Alive' %}:</td>
+                                            <td><b>{{ device.status }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Created by' %}:</td>
+                                            <td><b>{{ device.created_by  }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans 'Comment' %}:</td>
+                                            <td><b>{{ device.comment }}</b></td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5" style="padding-left: 0;padding-right: 0">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-info-circle"></i> {% trans 'Device Map' %}
+                            </div>
+                            <div class="panel-body">
+                                  <div style="width:100%;height:350px;border:#ccc solid 1px;" id="maps"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        数据点概况
+                    </div>
+                    <div class="panel-body">
+                        {%for dt in datapoint %}
+                        <div class="well col-xs-5" style="padding:2px;margin-left:2%; padding-right:2%;">
+                            <table class="table">
+                               <thead>
+                                  <tr>
+                                      <th>{{dt.name}}</th>
+                                      <th>时间</th>
+                                      <th>当前值</th>
+                                      <th>单位名称</th>
+                                      <td>历史查询</td>
+                                  </tr>
+                               </thead>
+                               <tbody>
+                                  <tr>
+                                      <td>数据点ID：{{dt.nbr}}</td>
+                                      <td><span class="label label-primary" name="dev_date_msg">{{dt.date_created}}</span></td>
+                                      <td><span class="label label-success" id="dev_data_{{dt.nbr}}">{{dt.value}}</span> {{dt.data_uint}}</td>
+                                      <td>{{dt.uint_name}}</td>
+                                      <th><a href="{% url 'devm:device-data-history' %}?id={{device.id}}&data_point={{dt.id}}" ><i class="fa fa-line-chart" aria-hidden="true"></i></a></th>
+                                  </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        设备实时监控
+                    </div>
+                    <div class="panel-body">
+                         <!--数据展示-->
+                            <div style="width:100%;height:400px;" id="container"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block custom_foot_js %}
+<script src="{% static 'js/plugins/echarts/echarts-all.js' %}"></script>
+
+<script>
+
+function deviceDelete(name, url) {
+    function doDelete() {
+        var body = {};
+        var success = function() {
+            swal('Deleted!', "[ "+name+"]"+" has been deleted ", "success");
+	        window.location.href="{% url 'devm:device-list' %}";
+        };
+        var fail = function() {
+            swal("Failed", "Delete"+"[ "+name+" ]"+"failed", "error");
+        };
+        APIUpdateAttr({
+            url: url,
+            body: JSON.stringify(body),
+            method: 'DELETE',
+            success: success,
+            error: fail
+        });
+    }
+    swal({
+        title: 'Are you sure delete ?',
+        text: " [" + name + "] ",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: 'Confirm',
+        closeOnConfirm: false
+    }, function () {
+        doDelete()
+    });
+}
+
+$(document).ready(function () {
+	$('.select2').select2();
+})
+.on('click', '.btn-delete-device', function () {
+	var name = $('.device-details > tbody > tr').attr("data-name");
+	var id = {{ device.id }};
+	var the_url = '{% url "api-devm:device-detail" pk=99991937 %}'.replace(99991937, id);
+	deviceDelete(name, the_url);
+});
+
+
+ var numbers = [
+            {
+                "lng" : 121.44,
+                "lat" : 31.32,
+                "number" : 5
+            },
+            {
+                "lng" : 121.44,
+                "lat" : 31.35,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.20,
+                "number" : 19
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.23,
+                "number" : 1
+            },
+            {
+                "lng" : 121.47,
+                "lat" : 31.26,
+                "number" : 21
+            },
+            {
+                "lng" : 121.50,
+                "lat" : 31.23,
+                "number" : 12
+            }
+        ];
+        var numberCluster = new maps.NumberCluster({
+            "center" : {
+                "lng" : 121.47,
+                "lat" : 31.23
+            },
+            "containerId" : "maps",
+            "adapters" : {
+                "amap" : "高德",
+                "baidu":"百度",
+                "qq" : "腾讯",
+                "google" : "谷歌"
+            },
+            "adaptersSwitch" : {
+                "show" : true,
+                "changeHash" : false,
+                "id" : "mapsAdaptersSwitch"
+            },
+            "defaultAdapter" : "qq"
+        });
+        numberCluster.addNumbers(numbers);
+
+
+
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+var temp_data = null;
+var option = null;
+
+
+{% autoescape off %}
+var legend = [{{ chart_legend}}];
+{% endautoescape %}
+
+console.log(legend);
+myChart.showLoading();
+var history_url = "{% url 'api-devm:data-history'%}?device_id={{device.id}}";
+$.getJSON(history_url).done(function (data) {
+    temp_data = data;
+    myChart.hideLoading();
+    myChart.setOption(option = {
+        title: {
+            text: '{{device.name}}'
+        },
+        legend: {
+            data: legend
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+        data: temp_data.map(function (item) {
+                return item[0];
+            })
+        },
+        yAxis: {
+            type: 'value',
+            splitLine: {
+                    show: true
+                }
+
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: { //数据视图
+                    show: true
+                },
+                restore: { //重置
+                    show: true
+                },
+                dataZoom: { //数据缩放视图
+                    show: true
+                },
+                saveAsImage: {//保存图片
+                    show: true
+                },
+                magicType: {//动态类型切换
+                    type: ['bar', 'line','scatter']
+                }
+            }
+        },
+        dataZoom: [{
+            type: 'inside', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 10,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+        }],
+        series: [
+
+{%for dt in datapoint %}
+    {%if forloop.first %}
+                {
+                    name: '{{dt.name}}({{dt.data_uint}})',
+                    type: 'line',
+                    markPoint:{
+                        data:   [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                                ]
+                        },
+                     markLine: {
+                        data: [
+                                {type: 'average', name: '平均值'}
+                             ]
+                        },
+                    data:  temp_data.map(function (item) {
+                        return item[{{dt.nbr}}];
+                    })
+                }
+    {%else%}
+                ,{
+                    name: '{{dt.name}}({{dt.data_uint}})',
+                    type: 'line',
+                    markPoint:{
+                        data:   [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                                ]
+                        },
+                     markLine: {
+                        data: [
+                                {type: 'average', name: '平均值'}
+                             ]
+                        },
+                    data:  temp_data.map(function (item) {
+                        return item[{{dt.nbr }}];
+                    })
+                }
+    {% endif %}
+{% endfor %}
+
+
+        ]
+    });
+});
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+
+
+function DeviceDataLatest()
+{
+    var the_url = "{% url 'api-devm:data-latest'%}?device_id={{device.id}}";
+    //console.log(the_url);
+    var device_point_num = {{data_point_total}};
+    //console.log(device_point_num);
+    $.getJSON(the_url).done(function (data) {
+        temp_data.push(data[0]);
+        var date = $("span[name='dev_date_msg']").text().split(" ");
+
+        $("span[name='dev_date_msg']").text(date[0]+" "+data[0][0]);
+       // console.log(data);
+
+        var id = '#dev_data_';
+        for(var i = 1; i <= device_point_num; i++)
+        {
+           var temp = id + i.toString();
+           console.log(temp);
+           $(temp.toString()).text(data[0][i].toString());
+           //console.log(data[0][1]);
+        }
+
+    });
+}
+
+setInterval(function () {
+   DeviceDataLatest();
+   myChart.setOption(option = {
+        title: {
+            text: '{{device.name}}'
+        },
+        legend: {
+            data: legend
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+        data: temp_data.map(function (item) {
+                return item[0];
+            })
+        },
+        yAxis: {
+            type: 'value',
+            splitLine: {
+                    show: true
+                }
+
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: { //数据视图
+                    show: true
+                },
+                restore: { //重置
+                    show: true
+                },
+                dataZoom: { //数据缩放视图
+                    show: true
+                },
+                saveAsImage: {//保存图片
+                    show: true
+                },
+                magicType: {//动态类型切换
+                    type: ['bar', 'line','scatter']
+                }
+            }
+        },
+        dataZoom: [{
+            type: 'inside', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 10,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+        }],
+        series: [
+
+{%for dt in datapoint %}
+    {%if forloop.first %}
+                {
+                    name: '{{dt.name}}({{dt.data_uint}})',
+                    type: 'line',
+                    markPoint:{
+                        data:   [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                                ]
+                        },
+                     markLine: {
+                        data: [
+                                {type: 'average', name: '平均值'}
+                             ]
+                        },
+                    data:  temp_data.map(function (item) {
+                        return item[{{dt.nbr}}];
+                    })
+                }
+    {%else%}
+                ,{
+                    name: '{{dt.name}}({{dt.data_uint}})',
+                    type: 'line',
+                    markPoint:{
+                        data:   [
+                                {type: 'max', name: '最大值'},
+                                {type: 'min', name: '最小值'}
+                                ]
+                        },
+                     markLine: {
+                        data: [
+                                {type: 'average', name: '平均值'}
+                             ]
+                        },
+                    data:  temp_data.map(function (item) {
+                        return item[{{dt.nbr }}];
+                    })
+                }
+    {% endif %}
+{% endfor %}
+
+
+        ]
+    },true);
+}, 5000);
+
+
+
+
+</script>
+{% endblock %}
