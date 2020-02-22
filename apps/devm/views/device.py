@@ -129,7 +129,7 @@ class DeviceDetailView(AdminUserRequiredMixin, DetailView):
             'action': _('Update Device'),
             'datapoint':dtpoint,
             'chart_legend':legend,
-            'data_point_total':len(dtpoint)
+            'data_point_total':(len(dtpoint) if dtpoint else 0)
         }
         kwargs.update(context)
         return super(DeviceDetailView, self).get_context_data(**kwargs)
