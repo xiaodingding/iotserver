@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'terminal.apps.TerminalConfig',
     'devm.apps.DevmConfig',
     'nav.apps.NavConfig',
+    'mqtt.apps.MqttConfig',
     'sysmanager.apps.SysManagerConfig',
     'fileupload.apps.FileuploadConfig',
     'backend.apps.BackendConfig',
@@ -74,7 +75,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles'
 ]
 
 MIDDLEWARE = [
@@ -274,6 +275,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'data', 'media')
 
 CHECKPOINT = os.path.join(PROJECT_DIR, 'data', 'checkpoint')
+
+# MQTT
+# Used for storage certs and keys if 'django_mqtt.publisher' is Installed
+# Test Example: MQTT_CERTS_ROOT = os.path.join(BASE_DIR, 'private')
+
+
+MQTT_CERTS_ROOT = os.path.join(PROJECT_DIR, 'data', 'certs')
+
 
 FILE_UPLOAD = 'upload'
 
