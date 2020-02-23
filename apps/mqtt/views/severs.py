@@ -2,7 +2,7 @@
 #
 
 from django.views.generic import ListView, UpdateView, DeleteView, \
-    DetailView, View
+    DetailView, CreateView
 from django.views.generic.edit import SingleObjectMixin
 from django.utils.translation import ugettext as _
 from django.utils import timezone
@@ -37,11 +37,40 @@ class ServerListView(AdminUserRequiredMixin, ListView):
         return context
 
 
+class ServerCreateView(AdminUserRequiredMixin, CreateView):
+    model = Server
+    form_class = ServerForm
+    template_name = 'mqtt/server_create_update.html'
+    success_url = reverse_lazy('mqtt:server-list')
+    # permission_classes = [IsOrgAdmin]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'app': _('Server'),
+            'action': _('create server'),
+            'api_action': "create",
+        }
+        kwargs.update(context)
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        server = form.save()
+        #device.device_ico = self.request.GET['']
+        server.created_by = self.request.user.username or 'System'
+        server.user = self.request.user
+        server.save()
+        return super(ServerCreateView, self).form_valid(form)
+
+
 class ServerUpdateView(AdminUserRequiredMixin, UpdateView):
     model = Server
     form_class = ServerForm
-    template_name = 'mqtt/server_update.html'
-    success_url = reverse_lazy('server:server-list')
+    template_name = 'mqtt/server_create_update.html'
+    success_url = reverse_lazy('mqtt:server-list')
 
     def get_context_data(self, **kwargs):
         context = super(ServerUpdateView, self).get_context_data(**kwargs)

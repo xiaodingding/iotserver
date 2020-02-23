@@ -1,12 +1,13 @@
 import socket
 import ssl
-
+import uuid
+from django.utils import timezone
 import paho.mqtt.client as mqtt
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from mqtt.models.base import ClientId, Topic
+from mqtt.models.connect import ClientId, Topic
 from mqtt.protocol import MQTT_QoS0, MQTT_QoS1, MQTT_QoS2
 from mqtt.signals import mqtt_connect, mqtt_disconnect, mqtt_pre_publish, mqtt_publish
 from users.models import User
@@ -120,12 +121,16 @@ class SecureConf(models.Model):
         :var ciphers: is a string specifying which encryption ciphers are allowable for this connection,
 or None to use the defaults.
     """
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     ca_certs = models.FileField(upload_to='ca', storage=private_fs)
     cert_reqs = models.IntegerField(choices=CERT_REQS, default=ssl.CERT_REQUIRED)
     tls_version = models.IntegerField(choices=PROTO_SSL_VERSION, default=ssl.PROTOCOL_TLSv1)
     certfile = models.FileField(upload_to='certs', storage=private_fs, blank=True, null=True)
     keyfile = models.FileField(upload_to='keys', storage=private_fs, blank=True, null=True)
     ciphers = models.CharField(max_length=1024, blank=True, null=True, default=None)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
 
 class Server(models.Model):
@@ -140,11 +145,15 @@ class Server(models.Model):
         If the broker reports that the client connected with an invalid protocol version,
         the client will automatically attempt to reconnect using v3.1 instead. Default mqttt.MQTTv311
     """
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     host = models.CharField(max_length=1024)
     port = models.IntegerField(default=1883)
     secure = models.ForeignKey(SecureConf, on_delete=models.CASCADE, null=True, blank=True)
     protocol = models.IntegerField(choices=PROTO_MQTT_VERSION, default=mqtt.MQTTv311)
     status = models.IntegerField(choices=PROTO_MQTT_CONN_STATUS, default=PROTO_MQTT_CONN_ERROR_UNKNOWN)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     class Meta:
         unique_together = ['host', 'port']
@@ -162,8 +171,12 @@ class Auth(models.Model):
 
         :var password : a string containing user password
     """
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     user = models.CharField(max_length=1024)
     password = models.CharField(max_length=1024, blank=True, null=True)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     def __str__(self):
         return "%s:%s" % (self.user, '*' * len(self.password))
@@ -185,12 +198,19 @@ class Client(models.Model):
         If False, the client is a persistent client and subscription information and queued messages will be retained
         when the client disconnects.
     """
-    server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    auth = models.ForeignKey(Auth, on_delete=models.CASCADE, blank=True, null=True)
-    client_id = models.ForeignKey(ClientId, on_delete=models.CASCADE, null=True, blank=True)
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    server = models.ForeignKey(Server, related_name='server', on_delete=models.CASCADE)
+    auth = models.ForeignKey(Auth, related_name='auth', on_delete=models.CASCADE, blank=True, null=True)
+    client_id = models.ForeignKey(ClientId, related_name='client_id', on_delete=models.CASCADE, null=True, blank=True)
 
     keepalive = models.IntegerField(default=60)
     clean_session = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+
+    class Meta:
+        ordering = ['date_created']
 
     def __str__(self):
         return "%s - %s" % (self.client_id, self.server)
@@ -240,15 +260,20 @@ class Data(models.Model):
 
         :var datetime : Datetime of last change
     """
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     qos = models.IntegerField(choices=PROTO_MQTT_QoS, default=0)
     payload = models.TextField(blank=True, null=True)
     retain = models.BooleanField(default=False)
     datetime = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     class Meta:
-        unique_together = ['client', 'topic']
+        ordering = ['date_created']
+
 
     def __str__(self):
         return "%s - %s - %s" % (self.payload, self.topic, self.client)

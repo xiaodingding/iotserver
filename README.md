@@ -17,6 +17,8 @@ Iotserver是一款使用Python, Django开发的物联网系统, 助力物联网�
   - 设备分组管理
   - GPS
   - 动态显示
+  - MQTT Client
+  - MQTT Server
 
 ### Environment 环境
    * Python 3.6

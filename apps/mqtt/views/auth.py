@@ -2,7 +2,7 @@
 #
 
 from django.views.generic import ListView, UpdateView, DeleteView, \
-    DetailView, View
+    DetailView, CreateView
 from django.views.generic.edit import SingleObjectMixin
 from django.utils.translation import ugettext as _
 from django.utils import timezone
@@ -37,10 +37,39 @@ class AuthListView(AdminUserRequiredMixin, ListView):
         return context
 
 
+
+class AuthCreateView(AdminUserRequiredMixin, CreateView):
+    model = Auth
+    form_class = AuthForm
+    template_name = 'mqtt/auth_create_update.html'
+    success_url = reverse_lazy('mqtt:auth-list')
+    # permission_classes = [IsOrgAdmin]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'app': _('Auth'),
+            'action': _('create auth'),
+            'api_action': "create",
+        }
+        kwargs.update(context)
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        auth = form.save()
+        #device.device_ico = self.request.GET['']
+        auth.created_by = self.request.user.username or 'System'
+        auth.save()
+        return super(AuthCreateView, self).form_valid(form)
+
+
 class AuthUpdateView(AdminUserRequiredMixin, UpdateView):
     model = Auth
     form_class = AuthForm
-    template_name = 'mqtt/auth_update.html'
+    template_name = 'mqtt/auth_create_update.html'
     success_url = reverse_lazy('auth:auth-list')
 
     def get_context_data(self, **kwargs):

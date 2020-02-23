@@ -2,7 +2,7 @@
 #
 
 from django.views.generic import ListView, UpdateView, DeleteView, \
-    DetailView, View
+    DetailView, CreateView
 from django.views.generic.edit import SingleObjectMixin
 from django.utils.translation import ugettext as _
 from django.utils import timezone
@@ -37,10 +37,39 @@ class ClientListView(AdminUserRequiredMixin, ListView):
         return context
 
 
+class ClientCreateView(AdminUserRequiredMixin, CreateView):
+    model = Client
+    form_class = ClientForm
+    template_name = 'mqtt/client_create_update.html'
+    success_url = reverse_lazy('mqtt:client-list')
+    # permission_classes = [IsOrgAdmin]
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'app': _('Client'),
+            'action': _('create client'),
+            'api_action': "create",
+        }
+        kwargs.update(context)
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        client = form.save()
+        #device.device_ico = self.request.GET['']
+        client.created_by = self.request.user.username or 'System'
+        client.user = self.request.user
+        client.save()
+        return super(ClientCreateView, self).form_valid(form)
+
+
 class ClientUpdateView(AdminUserRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
-    template_name = 'mqtt/client_update.html'
+    template_name = 'mqtt/client_create_update.html'
     success_url = reverse_lazy('client:client-list')
 
     def get_context_data(self, **kwargs):

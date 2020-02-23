@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^sysmanager/', include('sysmanager.urls.views_urls', namespace='sysmanager')),
 
     url(r'^identify/', include('identify.urls.views_urls', namespace='identify')),
+    url(r'^mqtt/', include('mqtt.urls.views_urls', namespace='mqtt')),
 
     #多媒体相关
     url(r'^editor/', include('editor.urls', namespace='editor')),
@@ -39,6 +40,7 @@ urlpatterns = [
     url(r'^api/nav/', include('nav.urls.api_urls', namespace='api-nav')),
     url(r'^api/sysmanager/', include('sysmanager.urls.api_urls', namespace='api-sysmanager')),
     url(r'^api/identify/', include('identify.urls.api_urls', namespace='api-identify')),
+    url(r'^api/mqtt/', include('mqtt.urls.api_urls', namespace='api-mqtt')),
 
     # External apps url
     url(r'^captcha/', include('captcha.urls')),

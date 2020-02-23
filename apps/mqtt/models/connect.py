@@ -1,5 +1,6 @@
 import six
-
+import uuid
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
@@ -36,10 +37,14 @@ class SecureSave(models.Model):
 
 
 class ClientId(SecureSave):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=23, db_index=True, blank=True, unique=True,
                             validators=[ClientIdValidator(valid_empty=ALLOW_EMPTY_CLIENT_ID)])
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
     groups = models.ManyToManyField(Group, blank=True)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     def is_public(self):
         return self.users.count() == 0 and self.groups.count() == 0
@@ -66,9 +71,13 @@ class ClientId(SecureSave):
 
 
 class Topic(SecureSave):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=1024, validators=[TopicValidator()], db_index=True, unique=True, blank=False)
     wildcard = models.BooleanField(default=False)
     dollar = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, blank=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     def __unicode__(self):  # pragma: no cover
         return self.name
@@ -198,6 +207,7 @@ class Topic(SecureSave):
 
 
 class ACL(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     allow = models.BooleanField(default=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)  # There is many of acc options by topic
     acc = models.IntegerField(choices=PROTO_MQTT_ACC)
@@ -205,6 +215,9 @@ class ACL(models.Model):
     groups = models.ManyToManyField(Group, blank=True)
     password = models.CharField(max_length=512, blank=True, null=True,
                                 help_text='Only valid for connect')
+    is_deleted = models.BooleanField(default=False)
+    created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
 
     class Meta:
         unique_together = ('topic', 'acc')
