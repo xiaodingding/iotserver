@@ -2,6 +2,7 @@
 
 import os
 import json
+import sys
 from functools import wraps
 
 from celery import Celery, subtask
@@ -18,16 +19,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'iotserver.settings')
 from django.conf import settings
 from django.core.cache import cache
 
-app = Celery('iotserver')
-
+# app = Celery('iotserver', broker='redis://127.0.0.1:6379/0', backend='redis://127.0.0.1:6379/0')
+# app = Celery('tasks', broker='redis://127.0.0.1:6379/0', backend='redis://127.0.0.1:6379/0')
 # Using a string here means the worker will not have to
+
+app = Celery('iotserver')
 # pickle the object when using Windows.
-app.config_from_object('django.conf:settings', namespace='CELERY')
+app.config_from_object('django.conf:settings', silent=False)
+# import config
+# app.config.from_object(settings)
+# app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: [app_config.split('.')[0] for app_config in settings.INSTALLED_APPS])
 
 
 def create_or_update_celery_periodic_tasks(tasks):
-    # from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
+    from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
     """
     :param tasks: {
         'add-every-monday-morning': {
@@ -97,15 +103,15 @@ def create_or_update_celery_periodic_tasks(tasks):
 
 
 def disable_celery_periodic_task(task_name):
-    # from django_celery_beat.models import PeriodicTask
-    # PeriodicTask.objects.filter(name=task_name).update(enabled=False)
-    pass
+    from django_celery_beat.models import PeriodicTask
+    PeriodicTask.objects.filter(name=task_name).update(enabled=False)
+    # pass
 
 
 def delete_celery_periodic_task(task_name):
-    # from django_celery_beat.models import PeriodicTask
-    # PeriodicTask.objects.filter(name=task_name).delete()
-    pass
+    from django_celery_beat.models import PeriodicTask
+    PeriodicTask.objects.filter(name=task_name).delete()
+    # pass
 
 
 __REGISTER_PERIODIC_TASKS = []
@@ -195,9 +201,10 @@ def after_app_shutdown(sender=None, headers=None, body=None, **kwargs):
     if cache.get("CELERY_APP_SHUTDOWN", 0) == 1:
         return
     cache.set("CELERY_APP_SHUTDOWN", 1, 10)
-    # from django_celery_beat.models import PeriodicTask
-    # logger.debug("App shutdown signal recv")
-    # logger.debug("Clean need cleaned period tasks: [{}]".format(
-    #     ', '.join(__AFTER_APP_SHUTDOWN_CLEAN_TASKS))
-    # )
-    # PeriodicTask.objects.filter(name__in=__AFTER_APP_SHUTDOWN_CLEAN_TASKS).delete()
+    if sys.platform.startswith('linux'):
+        from django_celery_beat.models import PeriodicTask
+        logger.debug("App shutdown signal recv")
+        logger.debug("Clean need cleaned period tasks: [{}]".format(
+            ', '.join(__AFTER_APP_SHUTDOWN_CLEAN_TASKS))
+        )
+        PeriodicTask.objects.filter(name__in=__AFTER_APP_SHUTDOWN_CLEAN_TASKS).delete()

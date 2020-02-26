@@ -17,7 +17,7 @@ from common.tasks import send_mail_async
 from common.utils import reverse, get_object_or_none
 from users.models import User, LoginLog
 from .models import Identify
-
+from identify.face_search import Face_Search
 
 logger = logging.getLogger('iotserver')
 
@@ -49,11 +49,14 @@ def check_identify_valid(**kwargs):
             return None, _('Password or username(email)  invalid')
 
         if softid:
+            logger.debug("realUser:{}, softid:{}".format(realUser, softid) )
             identify = Identify.objects.filter(user=realUser).filter(secret=softid)
             if identify :
                 return realUser, ''
             else:
                 return None, _('soft key invalid')
+        else:
+            return None, _('not find soft key')
     except:
        pass
     return None, _('Password or soft key invalid')
@@ -127,3 +130,11 @@ def get_ip_city(ip, timeout=10):
         except ValueError:
             pass
     return city
+
+def imageRectFromImage(image):
+    result = Face_Search.captcha_image(image)
+    return result
+
+def imageRectFromUrl(url):
+    result = Face_Search.captcha_url(url)
+    return result

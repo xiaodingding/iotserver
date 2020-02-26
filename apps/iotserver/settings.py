@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'devm.apps.DevmConfig',
     'nav.apps.NavConfig',
     'mqtt.apps.MqttConfig',
+    'identify.apps.IdentifyConfig',
     'sysmanager.apps.SysManagerConfig',
     'fileupload.apps.FileuploadConfig',
     'backend.apps.BackendConfig',
@@ -67,7 +68,6 @@ INSTALLED_APPS = [
     # 'rest_framework.authtoken',
     'django_filters',
     'bootstrap3',
-    'identify',
     'captcha',
     'editor',
     'ueditor',
@@ -75,7 +75,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
+    # 'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -342,13 +343,15 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = 'users.User'
 
 
-
 # Celery using redis as broker
 CELERY_BROKER_URL = 'redis://:%(password)s@%(host)s:%(port)s/3' % {
     'password': CONFIG.REDIS_PASSWORD if CONFIG.REDIS_PASSWORD else '',
     'host': CONFIG.REDIS_HOST or '127.0.0.1',
     'port': CONFIG.REDIS_PORT or 6379,
 }
+
+
+BROKER_URL = CONFIG.BROKER_URL if  CONFIG.BROKER_URL else CELERY_BROKER_URL
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL

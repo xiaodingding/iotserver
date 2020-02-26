@@ -44,6 +44,8 @@ class ClientSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         if not data['client_id']:
             data['client_id'] = ""
+        if not data['auth']:
+            data['auth'] = ""
         return data
 
 class SecureConfSerializer(serializers.Serializer):

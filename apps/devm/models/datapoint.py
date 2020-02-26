@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-
 from __future__ import unicode_literals
-
+import uuid
 from django.db import models, IntegrityError
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
@@ -27,7 +26,7 @@ class DataPoint(models.Model):
         ('Only-Write', _('Only-Write')),
         ('Read-And-Write', _('Read-And-Write')),
     )
-
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=128,blank=True, verbose_name=_('Name'))                 #变量名
     comment = models.TextField(blank=True, verbose_name=_('Comment'))
     templet = models.ForeignKey(DataTemplet,blank=False,verbose_name=_('Templet Id'), on_delete=models.DO_NOTHING)

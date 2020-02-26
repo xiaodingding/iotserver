@@ -41,3 +41,11 @@ def hello(name, callback=None):
 def hello_callback(result):
     print(result)
     print("Hello callback")
+
+@shared_task
+def longtime_add(x, y):
+    print('long time task begins')
+    # sleep 5 seconds
+    time.sleep(5)
+    print('long time task finished')
+    return (x + y)

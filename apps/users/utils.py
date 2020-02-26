@@ -201,7 +201,10 @@ def get_ip_city(ip, timeout=10):
 
     url = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?ip=%s&format=json' % ip
     try:
-        r = requests.get(url, timeout=timeout)
+        if("127.0.0.1" == ip or "localhost" == ip):
+            return "LocalMachine"
+        else:
+            r = requests.get(url, timeout=timeout)
     except requests.Timeout:
         r = None
     city = 'Unknown'

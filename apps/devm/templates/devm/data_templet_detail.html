@@ -156,7 +156,7 @@ $(document).ready(function () {
 		columnDefs: [
 			{targets: 0, createdCell: function (td, cellData, rowData) {
 				var detail_btn = '<a href="#" onclick="modal_show(this)" name="'+rowData.id+'"  data-aid="'+rowData.id+'">' + cellData + '</a>';
-				$(td).html(detail_btn.replace('99991937', rowData.id));
+				$(td).html(detail_btn.replace("{{ DEFAULT_PK }}", rowData.id));
 			}},
 			{targets: 6, createdCell: function (td, cellData) {
 				if (!cellData) {
@@ -166,8 +166,8 @@ $(document).ready(function () {
 				}
 			}},
 			{targets: 7, createdCell: function (td, cellData, rowData) {
-				var update_btn = '<a href="{% url "devm:data-point-update" pk=99991937 %}?templet_id={{ data_templet.id }}" class="btn btn-xs btn-info">{% trans "Update" %}</a>'.replace('99991937', rowData.id);
-				var del_btn = '<a class="btn btn-xs btn-danger m-l-xs btn_point_delete" data-uid="99991937">{% trans "Remove" %}</a>'.replace('99991937', rowData.id);
+				var update_btn = '<a href="{% url "devm:data-point-update" pk=DEFAULT_PK %}?templet_id={{ data_templet.id }}" class="btn btn-xs btn-info">{% trans "Update" %}</a>'.replace("{{ DEFAULT_PK }}", rowData.id);
+				var del_btn = '<a class="btn btn-xs btn-danger m-l-xs btn_point_delete" data-uid="DEFAULT_PK">{% trans "Remove" %}</a>'.replace("{{ DEFAULT_PK }}", rowData.id);
 				$(td).html(update_btn + del_btn)
 			}}
 		],
@@ -186,7 +186,7 @@ $(document).ready(function () {
     var $data_table = $('#datapoint_list_table').DataTable();
     var name = $(this).closest("tr").find(":nth-child(1)").children('a').html();
     var uid = $this.data('uid');
-    var the_url = '{% url "api-devm:data-point-detail" pk=99991937 %}'.replace('99991937', uid);
+    var the_url = '{% url "api-devm:data-point-detail" pk=DEFAULT_PK %}'.replace("{{ DEFAULT_PK }}", uid);
     objectDelete($this, name, the_url);
     setTimeout( function () {
         $data_table.ajax.reload();
@@ -199,7 +199,7 @@ function modal_show(md) {
     point_id = k.name;
 
     console.log("point_id:"+ point_id);
-    var url = "{% url 'devm:data-point-modal'  pk=99991937 %}".replace('99991937', point_id);
+    var url = "{% url 'devm:data-point-modal'  pk=DEFAULT_PK %}".replace("{{ DEFAULT_PK }}", point_id);
     $('#modal').modal({
         show: false,
         backdrop: 'static',

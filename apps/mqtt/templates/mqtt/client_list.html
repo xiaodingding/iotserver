@@ -63,8 +63,14 @@ function initTable() {
                 $(td).html(detail_btn.replace("{{ DEFAULT_PK }}", cellData.id));
              }},
             {targets: 2, createdCell: function (td, cellData) {
-                var detail_btn = '<a href="{% url "mqtt:auth-detail" pk=DEFAULT_PK %}">' + cellData.user + '</a>';
-                $(td).html(detail_btn.replace("{{ DEFAULT_PK }}", cellData.id));
+                if (cellData != "")
+                {
+                    var detail_btn = '<a href="{% url "mqtt:auth-detail" pk=DEFAULT_PK %}">' + cellData.user + '</a>';
+                    $(td).html(detail_btn.replace("{{ DEFAULT_PK }}", cellData.id));
+                }else{
+                    $(td).html(" ");
+                }
+
              }},
             {targets: 7, createdCell: function (td, cellData, rowData) {
                 var update_btn = '<a href="{% url "mqtt:client-update" pk=DEFAULT_PK %}" class="btn btn-xs btn-info">{% trans "Update" %}</a>'.replace('00000000-0000-0000-0000-000000000000', cellData);

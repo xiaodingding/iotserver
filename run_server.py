@@ -66,11 +66,13 @@ def start_gunicorn():
     elif sys.platform.startswith('win32'):
         make_migrations()
         cmd = "python manage.py runserver "
+        if DEBUG:
+            cmd += "--noreload"
     else:
         print("not support platform {}".format(sys.platform))
         exit()
-    p = subprocess.call(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
-    # p = subprocess.call(cmd, shell=True)
+    # p = subprocess.call(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
+    p = subprocess.Popen(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
     return p
 
 
@@ -86,14 +88,11 @@ def start_celery():
         celery -A common worker -l {}
         """.format(LOG_LEVEL.lower())
     elif sys.platform.startswith('win32'):
-        cmd = """
-        set C_FORCE_ROOT=1;
-        celery -A common worker -l {}
-        """.format(LOG_LEVEL.lower())
+        cmd = "celery -A common worker -l {}".format(LOG_LEVEL.lower())
     else:
         print("not support platform {}".format(sys.platform))
         exit()
-
+    print("celery cmd:{}".format(cmd))
     p = subprocess.Popen(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
     return p
 
@@ -103,23 +102,33 @@ def start_beat():
     os.chdir(APPS_DIR)
     os.environ.setdefault('PYTHONOPTIMIZE', '1')
     os.environ.setdefault('C_FORCE_ROOT', '1')
-    pidfile = '/tmp/beat.pid'
-    if os.path.exists(pidfile):
-        print("Beat pid file `{}` exist, remove it".format(pidfile))
-        os.unlink(pidfile)
-        time.sleep(0.5)
+    if sys.platform.startswith('linux'):
+        pidfile = '/tmp/beat.pid'
+        if os.path.exists(pidfile):
+            print("Beat pid file `{}` exist, remove it".format(pidfile))
+            os.unlink(pidfile)
+            time.sleep(0.5)
 
-    if os.path.exists(pidfile):
-        print("Beat pid file `{}` exist yet, may be something wrong".format(pidfile))
-        os.unlink(pidfile)
-        time.sleep(0.5)
+        if os.path.exists(pidfile):
+            print("Beat pid file `{}` exist yet, may be something wrong".format(pidfile))
+            os.unlink(pidfile)
+            time.sleep(0.5)
 
-    scheduler = "django_celery_beat.schedulers:DatabaseScheduler"
-    options = "--pidfile {}  -l {} --scheduler {} --max-interval 60".format(
-        pidfile, LOG_LEVEL, scheduler,
-    )
-    cmd = 'celery -A common beat {} '.format(options)
-    p = subprocess.Popen(cmd, shell=True, stdout=sys.stdout, stderr=sys.stderr)
+        scheduler = "django_celery_beat.schedulers:DatabaseScheduler"
+        options = "--pidfile {}  -l {} --scheduler {} --max-interval 60".format(
+            pidfile, LOG_LEVEL, scheduler,
+        )
+        cmd = 'celery -A common beat {} '.format(options)
+        p = subprocess.Popen(cmd, shell=True)
+        p.wait()
+        print("Popen ret: ", p.stdout.read())
+    elif sys.platform.startswith('win32'):
+        scheduler = "django_celery_beat.schedulers:DatabaseScheduler"
+        options = "--max-interval 60"
+        cmd = 'celery -A common beat {} '.format(options)
+        print("celery beat cmd:{}".format(cmd))
+        p = subprocess.Popen(cmd, shell=True)
+        p.wait()
     return p
 
 
@@ -132,7 +141,7 @@ def start_service(services):
     services_all = {
          "gunicorn": start_gunicorn,
          "celery": start_celery,
-        #  "beat": start_beat
+         "beat": start_beat
     }
 
     if 'all' in services:
@@ -146,7 +155,6 @@ def start_service(services):
     stop_event = threading.Event()
     while not stop_event.is_set():
         for name, proc in processes.items():
-            print(proc)
             if proc.poll() is not None:
                 print("\n\n" + "####"*10 + "  ERROR OCCUR  " + "####"*10)
                 print("Start service {} [FAILED]".format(name))

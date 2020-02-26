@@ -120,11 +120,10 @@ class Task(models.Model):
 
     @property
     def schedule(self):
-        return None
-        # try:
-        #     return PeriodicTask.objects.get(name=self.name)
-        # except PeriodicTask.DoesNotExist:
-        #     return None
+        try:
+            return PeriodicTask.objects.get(name=self.name)
+        except PeriodicTask.DoesNotExist:
+            return None
 
     def __str__(self):
         return self.name
@@ -187,12 +186,11 @@ class AdHoc(models.Model):
         else:
             become_info = None
 
-        # inventory = JMSInventory(
-        #     self.hosts, run_as_admin=self.run_as_admin,
-        #     run_as=self.run_as, become_info=become_info
-        # )
-        # return inventory
-        return None
+        inventory = JMSInventory(
+            self.hosts, run_as_admin=self.run_as_admin,
+            run_as=self.run_as, become_info=become_info
+        )
+        return inventory
 
     @property
     def become(self):

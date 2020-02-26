@@ -3,7 +3,6 @@
 #
 import os
 import uuid
-
 from collections import OrderedDict
 
 from django.conf import settings

@@ -44,7 +44,7 @@ class ClientId(SecureSave):
     groups = models.ManyToManyField(Group, blank=True)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     def is_public(self):
         return self.users.count() == 0 and self.groups.count() == 0
@@ -77,7 +77,7 @@ class Topic(SecureSave):
     dollar = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, blank=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     def __unicode__(self):  # pragma: no cover
         return self.name
@@ -217,7 +217,7 @@ class ACL(models.Model):
                                 help_text='Only valid for connect')
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     class Meta:
         unique_together = ('topic', 'acc')

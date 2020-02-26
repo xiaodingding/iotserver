@@ -7,7 +7,7 @@ from .utils import get_logger
 logger = get_logger(__file__)
 
 
-# @app.task
+@app.task
 def send_mail_async(*args, **kwargs):
     """ Using celery to send email async
 

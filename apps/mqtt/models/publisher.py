@@ -130,7 +130,7 @@ or None to use the defaults.
     ciphers = models.CharField(max_length=1024, blank=True, null=True, default=None)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
 
 class Server(models.Model):
@@ -153,7 +153,7 @@ class Server(models.Model):
     status = models.IntegerField(choices=PROTO_MQTT_CONN_STATUS, default=PROTO_MQTT_CONN_ERROR_UNKNOWN)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     class Meta:
         unique_together = ['host', 'port']
@@ -176,7 +176,7 @@ class Auth(models.Model):
     password = models.CharField(max_length=1024, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     def __str__(self):
         return "%s:%s" % (self.user, '*' * len(self.password))
@@ -207,7 +207,7 @@ class Client(models.Model):
     clean_session = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     class Meta:
         ordering = ['date_created']
@@ -269,7 +269,7 @@ class Data(models.Model):
     datetime = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     created_by = models.CharField(max_length=64, default='', null=True, verbose_name=_('Create by'))
-    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, default=timezone.now)
+    date_created = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     class Meta:
         ordering = ['date_created']

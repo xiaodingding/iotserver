@@ -3,14 +3,14 @@ from __future__ import absolute_import
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext as _
 
-from mqtt.models import Client, Data
-from mqtt.models import Topic
+from mqtt.models.publisher import Client, Data
+from mqtt.models.connect import Topic
 
 
 class Command(BaseCommand):
     help = _('Connect with client as subscriber, for real time update proposed')
     client_db = None
-    create_if_not_exist = False
+    create_if_not_exist = True
     use_update = False
 
     def add_arguments(self, parser):
@@ -38,6 +38,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if not options['topic']:
             raise CommandError(_('Topic requiered and must be only one'))
+        print("input topic:{}".format(options['topic']) )
         apply_filter = {}
         self.use_update = options['update']
         db_client_id = options['id']
@@ -77,10 +78,13 @@ class Command(BaseCommand):
         topic = None
         if topics.exists():
             topic = topics.get()
+            # print("from db find topic", topic)
         else:
             if self.create_if_not_exist:
                 topic = Topic.objects.create(name=message.topic)
+                print("from db creat topic", topic)
         if not topic:
+            print("not find topic")
             return
 
         datas = Data.objects.filter(topic=topic, client=self.client_db)

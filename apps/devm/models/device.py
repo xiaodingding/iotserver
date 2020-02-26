@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 import os
-
 import uuid
-
 from collections import OrderedDict
 
 from django.conf import settings
@@ -44,7 +42,7 @@ class Device(models.Model):
         ('JSON Active Upload', _("JSON Active Upload")),
         ('XML Active Upload', _("XML Active Upload")),
     )
-
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     name = models.CharField(max_length=20, unique=False, verbose_name=_('DeviceName'))
     groups = models.ManyToManyField(DeviceGroup, related_name='devices', blank=True, verbose_name=_('Device Group'))
     type = models.CharField(choices=TYPE_CHOICES, default='Default', max_length=100, blank=True, verbose_name=_('Type'))

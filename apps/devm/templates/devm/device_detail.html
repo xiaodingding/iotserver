@@ -225,8 +225,8 @@ $(document).ready(function () {
 })
 .on('click', '.btn-delete-device', function () {
 	var name = $('.device-details > tbody > tr').attr("data-name");
-	var id = {{ device.id }};
-	var the_url = '{% url "api-devm:device-detail" pk=99991937 %}'.replace(99991937, id);
+	var id = "{{ device.id }}";
+	var the_url = '{% url "api-devm:device-detail" pk=DEFAULT_PK %}'.replace("{{ DEFAULT_PK }}", id);
 	deviceDelete(name, the_url);
 });
 

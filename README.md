@@ -32,3 +32,22 @@ demo使用了开发者模式，并发只能为1
 
 - iotserver: [访问](http://demo.ddsiot.cn:8080)  账号: admin 密码: admin
 
+Django                   1.11
+django-bootstrap3        9.1.0
+django-celery            3.3.1
+django-celery-beat       1.4.0
+django-crispy-forms      1.8.1
+django-filter            1.1.0
+django-formtools         2.1
+django-import-export     2.0.1
+django-ranged-response   0.2.0
+django-redis-cache       1.7.1
+django-rest-swagger      2.1.2
+django-reversion         3.0.5
+django-simple-captcha    0.5.6
+django-suit              0.2.25
+django-timezone-field    3.1
+django-uuslug            1.2.0
+django-widget-tweaks     1.4.5
+djangorestframework      3.7.3
+djangorestframework-bulk 0.2.1

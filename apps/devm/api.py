@@ -131,7 +131,7 @@ def DataHistoryView(request):
 
             # print("device:%s, templet: %s, dtpoint:%s %d" % (device, templet, dtpoint, len(dtpoint)))
             if (templet is None  or dtpoint is None):
-                return HttpResponse("not find", status=404)
+                return HttpResponse("not find data templet and not find datapoint", status=404)
             else:
                 data_que = Data.objects.filter(device=device)
                 j = 0
@@ -205,7 +205,16 @@ def DataLatestView(request):
                 jsondata = jsondata + "]"
                 return HttpResponse(jsondata, status=200)
 
-
+#example
+'''
+http://127.0.0.1:8000/api/devm/v1/data/data/
+[{
+	"id": "8228dbdc-56ed-11ea-8a16-88d7f67ebb61",
+	"tempure": 0,
+	"humidity": 0
+}]
+'''
+#
 @csrf_exempt
 def DeviceDataUpdate(request):
     if request.method == 'GET':
@@ -220,12 +229,13 @@ def DeviceDataUpdate(request):
             data = json.loads(body)
             if not data:
                 return HttpResponse('json data error', status=401)
-
+            logger.debug("recv data:{}".format(data))
             queryset = Device.objects.filter(is_deleted=False)
             for dt in data:
                 if not 'id' in dt:
                     return HttpResponse('json data error not have id', status=401)
                 device_id = dt['id']
+                logger.debug("device_id:{}".format(device_id))
                 device = queryset.get(device_sn=device_id)
                 if not device:
                     return HttpResponse('Not have device', status=401)
