@@ -34,9 +34,7 @@ urlpatterns = [
     url(r'^api/common/', include('common.urls.api_urls', namespace='api-common')),
     url(r'^api/terminal/', include('terminal.urls.api_urls', namespace='api-terminal')),
     url(r'^api/devm/', include('devm.urls.api_urls', namespace='api-devm')),
-    url(r'^api/nav/', include('nav.urls.api_urls', namespace='api-nav')),
     url(r'^api/sysmanager/', include('sysmanager.urls.api_urls', namespace='api-sysmanager')),
-    url(r'^api/identify/', include('identify.urls.api_urls', namespace='api-identify')),
     url(r'^api/mqtt/', include('mqtt.urls.api_urls', namespace='api-mqtt')),
 
     # External apps url

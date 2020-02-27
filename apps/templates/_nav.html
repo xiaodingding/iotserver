@@ -14,25 +14,6 @@
         <li id="login-log"><a href="{% url 'users:login-log-list' %}">{% trans 'Login logs' %}</a></li>
     </ul>
 </li>
-<li id="Identify">
-    <a>
-        <i class="fa fa-inbox"></i> <span class="nav-label">{% trans 'Identify' %}</span><span class="fa arrow"></span>
-    </a>
-    <ul class="nav nav-second-level">
-        <li id="identify"><a href="{% url 'identify:identify-list' %}">{% trans 'Identify' %}</a></li>
-    </ul>
-</li>
-<li id="perms">
-    <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">{% trans 'Navigation' %}</span><span class="fa arrow"></span></a>
-    <ul class="nav nav-second-level">
-        <li id="nav-list">
-            <a href="{% url 'nav:category-site-list' %}">{% trans 'Category Site Tress List' %}</a>
-            <a href="{% url 'nav:category-list' %}">{% trans 'Category List' %}</a>
-            <a href="{% url 'nav:site-list' %}">{% trans 'Site List' %}</a>
-            <a href="{% url 'nav:siteinfo-list' %}">{% trans 'Site Info List' %}</a>
-        </li>
-    </ul>
-</li>
 <li id="terminal">
     <a>
         <i class="fa fa-rocket"></i> <span class="nav-label">{% trans 'Sessions' %}</span><span class="fa arrow"></span>
