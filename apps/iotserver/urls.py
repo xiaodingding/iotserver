@@ -20,10 +20,7 @@ urlpatterns = [
     url(r'^common/', include('common.urls.view_urls', namespace='common')),
     url(r'^terminal/', include('terminal.urls.views_urls', namespace='terminal')),
     url(r'^devm/', include('devm.urls.views_urls', namespace='devm')),
-    url(r'^nav/', include('nav.urls.views_urls', namespace='nav')),
     url(r'^sysmanager/', include('sysmanager.urls.views_urls', namespace='sysmanager')),
-
-    url(r'^identify/', include('identify.urls.views_urls', namespace='identify')),
     url(r'^mqtt/', include('mqtt.urls.views_urls', namespace='mqtt')),
 
     #多媒体相关
