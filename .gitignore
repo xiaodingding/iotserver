@@ -18,6 +18,8 @@ db.sqlite3
 config.py
 migrations/
 *.log
+.vscode
+.git
 host_rsa_key
 *.bat
 tags
