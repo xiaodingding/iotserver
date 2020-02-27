@@ -30,3 +30,6 @@ celerybeat.pid
 django.db
 celerybeat-schedule.db
 static
+data/checkpoint
+data/media
+apps/db.sqlite3
